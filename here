@@ -1,48 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>jsTree Example with jQuery</title>
-    <!-- Include jQuery and jsTree CSS and JS -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON Tree with jsTree</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.11/themes/default/style.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.11/jstree.min.js"></script>
+  <style>
+    /* Add your custom styles here */
+  </style>
 </head>
 <body>
 
-<!-- Container for jsTree -->
-<div id="tree"></div>
+<div id="jsonTree"></div>
 
 <script>
-    // Sample JSON data
-    var jsonData = [
-        {
-            "id": "node1",
-            "parent": "#",
-            "text": "Root Node"
-        },
-        {
-            "id": "node2",
-            "parent": "node1",
-            "text": "Child Node 1"
-        },
-        {
-            "id": "node3",
-            "parent": "node1",
-            "text": "Child Node 2"
-        }
-        // Add more nodes as needed
-    ];
+  // Your JSON data
+  const jsonData = {
+    "root": {
+      "item1": null,
+      "item2": {
+        "subItem1": null,
+        "subItem2": null
+      },
+      "item3": null
+    }
+  };
 
-    // Initialize jsTree with jQuery
-    $(document).ready(function () {
-        $('#tree').jstree({
-            'core': {
-                'data': jsonData
-            }
-        });
-    });
+  // Initialize jsTree
+  $('#jsonTree').jstree({
+    'core': {
+      'data': [jsonData]
+    }
+  });
 </script>
 
 </body>
