@@ -37,6 +37,19 @@
     'checkbox': {
       'tie_selection': false
     }
+  }).on('check_node.jstree uncheck_node.jstree', function (e, data) {
+    const node = data.node;
+    const isOpen = node.state && node.state.opened;
+
+    // If the node is checked and has children, open its children
+    if (data.action === 'check_node' && node.children.length > 0 && !isOpen) {
+      $('#jsonTree').jstree('open_node', node);
+    }
+
+    // If the node is unchecked and has children, close its children
+    if (data.action === 'uncheck_node' && node.children.length > 0 && isOpen) {
+      $('#jsonTree').jstree('close_node', node);
+    }
   });
 </script>
 
