@@ -22,10 +22,10 @@ const treeData = {
 };
 
 // Recursive function to create nested ul li structure with checkmarks
-const renderTree = (node, onNodeClick) => {
+const renderTree = (node) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleNodeClick = () => {
+  const handleToggle = () => {
     if (node.children && node.children.length > 0) {
       setIsOpen(!isOpen);
     }
@@ -34,13 +34,13 @@ const renderTree = (node, onNodeClick) => {
   return (
     <ul key={node.label}>
       <li>
-        <span onClick={handleNodeClick}>
+        <span onClick={handleToggle}>
           {node.children && node.children.length > 0 && (isOpen ? '[-] ' : '[+] ')}
           {node.label}
         </span>
       </li>
       {isOpen && node.children && node.children.length > 0 && (
-        <ul>{node.children.map((child) => renderTree(child, onNodeClick))}</ul>
+        <ul>{node.children.map((child) => renderTree(child))}</ul>
       )}
     </ul>
   );
