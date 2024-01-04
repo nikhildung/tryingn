@@ -1,32 +1,41 @@
 import React from 'react';
-import Tree from 'react-d3-tree';
 
 // Your hierarchical data
 const treeData = {
-  name: 'Root',
+  label: 'Root',
   children: [
     {
-      name: 'Node 1',
+      label: 'Node 1',
       children: [
-        { name: 'Node 1.1' },
-        { name: 'Node 1.2' }
+        { label: 'Node 1.1' },
+        { label: 'Node 1.2' }
       ]
     },
     {
-      name: 'Node 2',
+      label: 'Node 2',
       children: [
-        { name: 'Node 2.1' },
-        { name: 'Node 2.2' }
+        { label: 'Node 2.1' },
+        { label: 'Node 2.2' }
       ]
     }
   ]
 };
 
+// Recursive function to create nested ul li structure
+const renderTree = (node) => (
+  <ul key={node.label}>
+    <li>{node.label}</li>
+    {node.children && node.children.length > 0 && (
+      <ul>{node.children.map((child) => renderTree(child))}</ul>
+    )}
+  </ul>
+);
+
 // React component
 const TreeComponent = () => {
   return (
-    <div style={{ width: '100%', height: '400px' }}>
-      <Tree data={treeData} orientation="vertical" />
+    <div>
+      {renderTree(treeData)}
     </div>
   );
 };
