@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 // Your hierarchical data
 const treeData = {
@@ -21,15 +21,30 @@ const treeData = {
   ]
 };
 
-// Recursive function to create nested ul li structure
-const renderTree = (node) => (
-  <ul key={node.label}>
-    <li>{node.label}</li>
-    {node.children && node.children.length > 0 && (
-      <ul>{node.children.map((child) => renderTree(child))}</ul>
-    )}
-  </ul>
-);
+// Recursive function to create nested ul li structure with checkmarks
+const renderTree = (node, onNodeClick) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleNodeClick = () => {
+    if (node.children && node.children.length > 0) {
+      setIsOpen(!isOpen);
+    }
+  };
+
+  return (
+    <ul key={node.label}>
+      <li>
+        <span onClick={handleNodeClick}>
+          {node.children && node.children.length > 0 && (isOpen ? '[-] ' : '[+] ')}
+          {node.label}
+        </span>
+      </li>
+      {isOpen && node.children && node.children.length > 0 && (
+        <ul>{node.children.map((child) => renderTree(child, onNodeClick))}</ul>
+      )}
+    </ul>
+  );
+};
 
 // React component
 const TreeComponent = () => {
