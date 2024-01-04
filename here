@@ -3,59 +3,83 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tree Structure Example</title>
+  <title>D3.js Tree Example</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
   <style>
     /* Style for tree nodes */
-    .tree-node {
-      margin-left: 20px;
+    circle {
+      fill: #fff;
+      stroke: steelblue;
+      stroke-width: 2px;
+    }
+
+    text {
+      font: 12px sans-serif;
     }
   </style>
 </head>
 <body>
 
-  <!-- Tree container -->
-  <div id="tree-container"></div>
+  <!-- SVG container for the tree -->
+  <svg width="400" height="300"></svg>
 
   <script>
-    // Your JSON data (replace this with your actual JSON file data)
-    const jsonData = [
-      {
-        label: 'Node 1',
-        children: [
-          {
-            label: 'Node 1.1',
-            children: [
-              { label: 'Node 1.1.1' },
-              { label: 'Node 1.1.2' }
-            ]
-          },
-          { label: 'Node 1.2' }
-        ]
-      },
-      { label: 'Node 2' }
-    ];
+    // Your hierarchical data (replace this with your actual data)
+    const treeData = {
+      label: 'Root',
+      children: [
+        {
+          label: 'Node 1',
+          children: [
+            { label: 'Node 1.1' },
+            { label: 'Node 1.2' }
+          ]
+        },
+        {
+          label: 'Node 2',
+          children: [
+            { label: 'Node 2.1' },
+            { label: 'Node 2.2' }
+          ]
+        }
+      ]
+    };
 
-    // Function to create a tree node
-    function createTreeNode(node, parentElement) {
-      const treeNode = document.createElement('div');
-      treeNode.className = 'tree-node';
-      treeNode.innerHTML = node.label;
+    // Create a tree layout
+    const treeLayout = d3.tree().size([400, 300]);
 
-      // Recursive call for children
-      if (node.children && node.children.length > 0) {
-        const childrenContainer = document.createElement('div');
-        node.children.forEach(child => createTreeNode(child, childrenContainer));
-        treeNode.appendChild(childrenContainer);
-      }
+    // Append an SVG container
+    const svg = d3.select('svg');
+    const g = svg.append('g').attr('transform', 'translate(20, 20)');
 
-      parentElement.appendChild(treeNode);
-    }
+    // Create a hierarchy from the data
+    const root = d3.hierarchy(treeData);
 
-    // Initialize the tree
-    document.addEventListener('DOMContentLoaded', function () {
-      const treeContainer = document.querySelector('#tree-container');
-      jsonData.forEach(node => createTreeNode(node, treeContainer));
-    });
+    // Assign coordinates to each node in the hierarchy
+    treeLayout(root);
+
+    // Draw links between nodes
+    g.selectAll('.link')
+      .data(root.links())
+      .enter().append('path')
+      .attr('class', 'link')
+      .attr('d', d3.linkHorizontal().x(d => d.y).y(d => d.x));
+
+    // Draw nodes
+    const node = g.selectAll('.node')
+      .data(root.descendants())
+      .enter().append('g')
+      .attr('class', 'node')
+      .attr('transform', d => `translate(${d.y},${d.x})`);
+
+    node.append('circle')
+      .attr('r', 5);
+
+    node.append('text')
+      .attr('dy', 3)
+      .attr('x', d => d.children ? -8 : 8)
+      .style('text-anchor', d => d.children ? 'end' : 'start')
+      .text(d => d.data.label);
   </script>
 
 </body>
