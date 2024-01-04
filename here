@@ -3,64 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tree Grid Example</title>
-  <!-- Include ag-Grid styles -->
-  <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/styles/ag-grid.css">
-  <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/styles/ag-theme-alpine.css">
+  <title>Tree Structure Example</title>
+  <style>
+    /* Style for tree nodes */
+    .tree-node {
+      margin-left: 20px;
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Ag-Grid container -->
-  <div id="myGrid" style="height: 400px;" class="ag-theme-alpine"></div>
-
-  <!-- Include ag-Grid script -->
-  <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
+  <!-- Tree container -->
+  <div id="tree-container"></div>
 
   <script>
     // Your JSON data (replace this with your actual JSON file data)
     const jsonData = [
       {
-        id: 1,
-        name: 'Node 1',
+        label: 'Node 1',
         children: [
           {
-            id: 2,
-            name: 'Node 1.1',
+            label: 'Node 1.1',
             children: [
-              { id: 3, name: 'Node 1.1.1' },
-              { id: 4, name: 'Node 1.1.2' }
+              { label: 'Node 1.1.1' },
+              { label: 'Node 1.1.2' }
             ]
           },
-          { id: 5, name: 'Node 1.2' }
+          { label: 'Node 1.2' }
         ]
       },
-      { id: 6, name: 'Node 2' }
+      { label: 'Node 2' }
     ];
 
-    // Ag-Grid configuration
-    const gridOptions = {
-      columnDefs: [
-        { headerName: 'ID', field: 'id' },
-        { headerName: 'Name', field: 'name' }
-      ],
-      defaultColDef: {
-        flex: 1,
-        minWidth: 100,
-        sortable: true,
-        filter: true
-      },
-      autoGroupColumnDef: {
-        headerName: 'Hierarchy',
-        minWidth: 250,
-        cellRendererParams: { suppressCount: true }
-      },
-      rowData: jsonData
-    };
+    // Function to create a tree node
+    function createTreeNode(node, parentElement) {
+      const treeNode = document.createElement('div');
+      treeNode.className = 'tree-node';
+      treeNode.innerHTML = node.label;
 
-    // Initialize Ag-Grid
+      // Recursive call for children
+      if (node.children && node.children.length > 0) {
+        const childrenContainer = document.createElement('div');
+        node.children.forEach(child => createTreeNode(child, childrenContainer));
+        treeNode.appendChild(childrenContainer);
+      }
+
+      parentElement.appendChild(treeNode);
+    }
+
+    // Initialize the tree
     document.addEventListener('DOMContentLoaded', function () {
-      const gridDiv = document.querySelector('#myGrid');
-      new agGrid.Grid(gridDiv, gridOptions);
+      const treeContainer = document.querySelector('#tree-container');
+      jsonData.forEach(node => createTreeNode(node, treeContainer));
     });
   </script>
 
