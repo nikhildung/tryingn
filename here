@@ -3,55 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JSON Tree with jsTree</title>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.11/themes/default/style.min.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.11/jstree.min.js"></script>
-  <style>
-    /* Add your custom styles here */
-  </style>
+  <title>Tree Grid Example</title>
+  <!-- Include ag-Grid styles -->
+  <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/styles/ag-grid.css">
+  <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/styles/ag-theme-alpine.css">
 </head>
 <body>
 
-<div id="jsonTree"></div>
+  <!-- Ag-Grid container -->
+  <div id="myGrid" style="height: 400px;" class="ag-theme-alpine"></div>
 
-<script>
-  // Your JSON data
-  const jsonData = {
-    "root": {
-      "item1": null,
-      "item2": {
-        "subItem1": null,
-        "subItem2": null
+  <!-- Include ag-Grid script -->
+  <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
+
+  <script>
+    // Your JSON data (replace this with your actual JSON file data)
+    const jsonData = [
+      {
+        id: 1,
+        name: 'Node 1',
+        children: [
+          {
+            id: 2,
+            name: 'Node 1.1',
+            children: [
+              { id: 3, name: 'Node 1.1.1' },
+              { id: 4, name: 'Node 1.1.2' }
+            ]
+          },
+          { id: 5, name: 'Node 1.2' }
+        ]
       },
-      "item3": null
-    }
-  };
+      { id: 6, name: 'Node 2' }
+    ];
 
-  // Initialize jsTree with checkmarks
-  $('#jsonTree').jstree({
-    'core': {
-      'data': [jsonData]
-    },
-    'plugins': ['checkbox'],
-    'checkbox': {
-      'tie_selection': false
-    }
-  }).on('check_node.jstree uncheck_node.jstree', function (e, data) {
-    const node = data.node;
-    const isOpen = node.state && node.state.opened;
+    // Ag-Grid configuration
+    const gridOptions = {
+      columnDefs: [
+        { headerName: 'ID', field: 'id' },
+        { headerName: 'Name', field: 'name' }
+      ],
+      defaultColDef: {
+        flex: 1,
+        minWidth: 100,
+        sortable: true,
+        filter: true
+      },
+      autoGroupColumnDef: {
+        headerName: 'Hierarchy',
+        minWidth: 250,
+        cellRendererParams: { suppressCount: true }
+      },
+      rowData: jsonData
+    };
 
-    // If the node is checked and has children, open its children
-    if (data.action === 'check_node' && node.children.length > 0 && !isOpen) {
-      $('#jsonTree').jstree('open_node', node);
-    }
-
-    // If the node is unchecked and has children, close its children
-    if (data.action === 'uncheck_node' && node.children.length > 0 && isOpen) {
-      $('#jsonTree').jstree('close_node', node);
-    }
-  });
-</script>
+    // Initialize Ag-Grid
+    document.addEventListener('DOMContentLoaded', function () {
+      const gridDiv = document.querySelector('#myGrid');
+      new agGrid.Grid(gridDiv, gridOptions);
+    });
+  </script>
 
 </body>
 </html>
