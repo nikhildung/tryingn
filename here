@@ -1,6 +1,7 @@
 // YourComponent.jsx
 import React, { useState } from 'react';
 import jsonData from './data.json';
+import './TreeComponent.css'; // Import a separate CSS file for styling
 
 const TreeNode = ({ node, onNodeClick }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,7 +13,16 @@ const TreeNode = ({ node, onNodeClick }) => {
 
   return (
     <li>
-      <span onClick={handleNodeClick}>{node.name}</span>
+      <label className="tree-node-label">
+        <input type="checkbox" className="tree-node-checkbox" />
+        <span
+          style={{ fontSize: '16px' }}
+          className="tree-node-text"
+          onClick={handleNodeClick}
+        >
+          {node.name}
+        </span>
+      </label>
       {isOpen && node.children.length > 0 && (
         <ul>
           {node.children.map(child => (
