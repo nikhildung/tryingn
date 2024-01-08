@@ -1,58 +1,36 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-// Your hierarchical data
-const treeData = {
-  label: 'Root',
-  children: [
-    {
-      label: 'Node 1',
-      children: [
-        { label: 'Node 1.1' },
-        { label: 'Node 1.2' }
-      ]
-    },
-    {
-      label: 'Node 2',
-      children: [
-        { label: 'Node 2.1' },
-        { label: 'Node 2.2' }
-      ]
-    }
-  ]
-};
+const CardComponent = ({ title, description, image }) => (
+  <div className="card">
+    <img src={image} alt={title} />
+    <h3>{title}</h3>
+    <p>{description}</p>
+  </div>
+);
 
-// Recursive function to create nested ul li structure with checkmarks
-const renderTree = (node) => {
-  const [isOpen, setIsOpen] = useState(false);
+const App = () => {
+  const [data, setData] = useState([]);
 
-  const handleToggle = () => {
-    if (node.children && node.children.length > 0) {
-      setIsOpen(!isOpen);
-    }
-  };
+  useEffect(() => {
+    // Fetch JSON data
+    fetch('your_json_file.json')
+      .then(response => response.json())
+      .then(data => setData(data))
+      .catch(error => console.error('Error fetching data:', error));
+  }, []);
 
   return (
-    <ul key={node.label}>
-      <li>
-        <span onClick={handleToggle}>
-          {node.children && node.children.length > 0 && (isOpen ? '[-] ' : '[+] ')}
-          {node.label}
-        </span>
-      </li>
-      {isOpen && node.children && node.children.length > 0 && (
-        <ul>{node.children.map((child) => renderTree(child))}</ul>
-      )}
-    </ul>
-  );
-};
-
-// React component
-const TreeComponent = () => {
-  return (
-    <div>
-      {renderTree(treeData)}
+    <div className="card-container">
+      {data.map(item => (
+        <CardComponent
+          key={item.id} // Make sure to set a unique key for each card
+          title={item.title}
+          description={item.description}
+          image={item.image}
+        />
+      ))}
     </div>
   );
 };
 
-export default TreeComponent;
+export default App;
