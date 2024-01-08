@@ -1,35 +1,63 @@
+// data.json
+[
+  {
+    "id": 1,
+    "name": "Parent 1",
+    "children": [
+      {
+        "id": 2,
+        "name": "Child 1.1",
+        "children": [
+          {
+            "id": 3,
+            "name": "Child 1.1.1",
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "name": "Child 1.2",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Parent 2",
+    "children": [
+      {
+        "id": 6,
+        "name": "Child 2.1",
+        "children": []
+      }
+    ]
+  }
+]
+
 // YourComponent.jsx
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import jsonData from './data.json';
 
-const CardComponent = ({ title, description, image }) => (
-  <div className="card">
-    <img src={image} alt={title} />
-    <h3>{title}</h3>
-    <p>{description}</p>
-  </div>
+const TreeNode = ({ node }) => (
+  <li>
+    {node.name}
+    {node.children.length > 0 && (
+      <ul>
+        {node.children.map(child => (
+          <TreeNode key={child.id} node={child} />
+        ))}
+      </ul>
+    )}
+  </li>
 );
 
-const YourComponent = () => {
-  const [data, setData] = useState([]);
+const TreeComponent = () => (
+  <ul>
+    {jsonData.map(parent => (
+      <TreeNode key={parent.id} node={parent} />
+    ))}
+  </ul>
+);
 
-  useEffect(() => {
-    // Use the imported JSON data directly
-    setData(jsonData);
-  }, []);
-
-  return (
-    <div className="card-container">
-      {data.map(item => (
-        <CardComponent
-          key={item.id} // Make sure to set a unique key for each card
-          title={item.title}
-          description={item.description}
-          image={item.image}
-        />
-      ))}
-    </div>
-  );
-};
-
-export default YourComponent;
+export default TreeComponent;
