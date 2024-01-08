@@ -1,63 +1,42 @@
-// data.json
-[
-  {
-    "id": 1,
-    "name": "Parent 1",
-    "children": [
-      {
-        "id": 2,
-        "name": "Child 1.1",
-        "children": [
-          {
-            "id": 3,
-            "name": "Child 1.1.1",
-            "children": []
-          }
-        ]
-      },
-      {
-        "id": 4,
-        "name": "Child 1.2",
-        "children": []
-      }
-    ]
-  },
-  {
-    "id": 5,
-    "name": "Parent 2",
-    "children": [
-      {
-        "id": 6,
-        "name": "Child 2.1",
-        "children": []
-      }
-    ]
-  }
-]
-
 // YourComponent.jsx
-import React from 'react';
+import React, { useState } from 'react';
 import jsonData from './data.json';
 
-const TreeNode = ({ node }) => (
-  <li>
-    {node.name}
-    {node.children.length > 0 && (
-      <ul>
-        {node.children.map(child => (
-          <TreeNode key={child.id} node={child} />
-        ))}
-      </ul>
-    )}
-  </li>
-);
+const TreeNode = ({ node, onNodeClick }) => {
+  const [isOpen, setIsOpen] = useState(false);
 
-const TreeComponent = () => (
-  <ul>
-    {jsonData.map(parent => (
-      <TreeNode key={parent.id} node={parent} />
-    ))}
-  </ul>
-);
+  const handleNodeClick = () => {
+    setIsOpen(!isOpen);
+    onNodeClick(node);
+  };
+
+  return (
+    <li>
+      <span onClick={handleNodeClick}>{node.name}</span>
+      {isOpen && node.children.length > 0 && (
+        <ul>
+          {node.children.map(child => (
+            <TreeNode key={child.id} node={child} onNodeClick={onNodeClick} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+};
+
+const TreeComponent = () => {
+  const handleNodeClick = (node) => {
+    console.log(`Clicked on ${node.name}`);
+    // Add your logic for handling node clicks here
+  };
+
+  return (
+    <ul>
+      {jsonData.map(parent => (
+        <TreeNode key={parent.id} node={parent} onNodeClick={handleNodeClick} />
+      ))}
+    </ul>
+  );
+};
 
 export default TreeComponent;
