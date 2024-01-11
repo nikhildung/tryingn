@@ -1,52 +1,48 @@
-// YourComponent.jsx
 import React, { useState } from 'react';
-import jsonData from './data.json';
-import './TreeComponent.css'; // Import a separate CSS file for styling
 
-const TreeNode = ({ node, onNodeClick }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const CardFilter = ({ cards }) => {
+  const [filterText, setFilterText] = useState('');
 
-  const handleNodeClick = () => {
-    setIsOpen(!isOpen);
-    onNodeClick(node);
+  const handleFilterChange = (event) => {
+    setFilterText(event.target.value.toLowerCase());
   };
 
+  const filteredCards = cards.filter(
+    (card) =>
+      card.title.toLowerCase().includes(filterText) ||
+      card.description.toLowerCase().includes(filterText)
+  );
+
   return (
-    <li>
-      <label className="tree-node-label">
-        <input type="checkbox" className="tree-node-checkbox" />
-        <span
-          style={{ fontSize: '16px' }}
-          className="tree-node-text"
-          onClick={handleNodeClick}
-        >
-          {node.name}
-        </span>
-      </label>
-      {isOpen && node.children.length > 0 && (
-        <ul>
-          {node.children.map(child => (
-            <TreeNode key={child.id} node={child} onNodeClick={onNodeClick} />
-          ))}
-        </ul>
-      )}
-    </li>
+    <div>
+      <input
+        type="text"
+        placeholder="Type to filter"
+        value={filterText}
+        onChange={handleFilterChange}
+      />
+
+      <div>
+        {filteredCards.map((card, index) => (
+          <div key={index}>
+            <h3>{card.title}</h3>
+            <p>{card.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 
-const TreeComponent = () => {
-  const handleNodeClick = (node) => {
-    console.log(`Clicked on ${node.name}`);
-    // Add your logic for handling node clicks here
-  };
+// Example usage:
+const App = () => {
+  const exampleCards = [
+    { title: 'Card 1', description: 'Description 1' },
+    { title: 'Card 2', description: 'Description 2' },
+    // Add more cards as needed
+  ];
 
-  return (
-    <ul>
-      {jsonData.map(parent => (
-        <TreeNode key={parent.id} node={parent} onNodeClick={handleNodeClick} />
-      ))}
-    </ul>
-  );
+  return <CardFilter cards={exampleCards} />;
 };
 
-export default TreeComponent;
+export default App;
