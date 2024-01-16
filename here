@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Sidebarsection.css';
 import Task_Navbarlinks from '../Task_Navbarlinks';
 import jsonData from '../API/Sidebar.json';
@@ -16,18 +16,26 @@ const SidebarSection = () => {
       onNodeClick(node);
     };
 
+    useEffect(() => {
+      // Expand the node if it's in the filtered data
+      if (filteredData.some(filteredNode => filteredNode.id === node.id)) {
+        setIsOpen(true);
+      }
+    }, [filteredData, node]);
+
     // Automatically expand parent nodes if they contain a matching child
-    const isNodeExpanded = expandedNodes.includes(node.id);
-    React.useEffect(() => {
-      if (node.children.some(child => child.name.toLowerCase().includes(searchTerm.toLowerCase()))) {
+    useEffect(() => {
+      if (node.children && node.children.some(child => child.name.toLowerCase().includes(searchTerm.toLowerCase()))) {
         setExpandedNodes((prevExpandedNodes) => [...prevExpandedNodes, node.id]);
       }
     }, [searchTerm, node]);
 
+    const isNodeExpanded = expandedNodes.includes(node.id);
+
     return (
       <li>
         <span onClick={handleNodeClick}>{node.name}</span>
-        {isOpen && node.children.length > 0 && (
+        {(isOpen || isNodeExpanded) && node.children.length > 0 && (
           <ul>
             {node.children.map(child => (
               <TreeNode key={child.id} node={child} onNodeClick={onNodeClick} />
