@@ -6,7 +6,6 @@ import jsonData from '../API/Sidebar.json';
 const SidebarSection = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState(jsonData);
-  const [expandedNodes, setExpandedNodes] = useState([]);
 
   const TreeNode = ({ node, onNodeClick }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -23,19 +22,12 @@ const SidebarSection = () => {
       }
     }, [filteredData, node]);
 
-    // Automatically expand parent nodes if they contain a matching child
-    useEffect(() => {
-      if (node.children && node.children.some(child => child.name.toLowerCase().includes(searchTerm.toLowerCase()))) {
-        setExpandedNodes((prevExpandedNodes) => [...prevExpandedNodes, node.id]);
-      }
-    }, [searchTerm, node]);
-
-    const isNodeExpanded = expandedNodes.includes(node.id);
+    const isNodeExpanded = isOpen || node.children.some(child => child.id === node.id && child.children && child.children.length > 0);
 
     return (
       <li>
         <span onClick={handleNodeClick}>{node.name}</span>
-        {(isOpen || isNodeExpanded) && node.children.length > 0 && (
+        {isNodeExpanded && node.children.length > 0 && (
           <ul>
             {node.children.map(child => (
               <TreeNode key={child.id} node={child} onNodeClick={onNodeClick} />
@@ -47,8 +39,8 @@ const SidebarSection = () => {
   };
 
   const handleNodeClick = (node) => {
+    // Handle node click logic if needed
     console.log(`Clicked on ${node.name}`);
-    // Add your logic for handling node clicks here
   };
 
   const handleSearch = (event) => {
@@ -64,11 +56,6 @@ const SidebarSection = () => {
     return nodes.filter(node => {
       const nodeMatches = node.name.toLowerCase().includes(term);
       const childMatches = node.children && filterNodes(node.children, term).length > 0;
-
-      if (nodeMatches) {
-        // Expand the parent node when a matching child is found
-        setExpandedNodes((prevExpandedNodes) => [...prevExpandedNodes, node.id]);
-      }
 
       return nodeMatches || childMatches;
     });
