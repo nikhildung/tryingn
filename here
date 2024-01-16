@@ -1,18 +1,20 @@
-import React, {useState} from 'react'
-import './Sidebarsection.css'
-import Task_Navbarlinks from '../Task_Navbarlinks'
-import jsonData from '../API/Sidebar.json'
+import React, { useState } from 'react';
+import './Sidebarsection.css';
+import Task_Navbarlinks from '../Task_Navbarlinks';
+import jsonData from '../API/Sidebar.json';
 
+const SidebarSection = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredData, setFilteredData] = useState(jsonData);
 
-const sidebarsection = () => {
   const TreeNode = ({ node, onNodeClick }) => {
     const [isOpen, setIsOpen] = useState(false);
-  
+
     const handleNodeClick = () => {
       setIsOpen(!isOpen);
       onNodeClick(node);
     };
-  
+
     return (
       <li>
         <span onClick={handleNodeClick}>{node.name}</span>
@@ -26,34 +28,47 @@ const sidebarsection = () => {
       </li>
     );
   };
-  
+
   const handleNodeClick = (node) => {
     console.log(`Clicked on ${node.name}`);
     // Add your logic for handling node clicks here
   };
+
+  const handleSearch = (event) => {
+    const searchTerm = event.target.value.toLowerCase();
+    setSearchTerm(searchTerm);
+
+    // Filter the data based on the search term
+    const filteredNodes = filterNodes(jsonData, searchTerm);
+    setFilteredData(filteredNodes);
+  };
+
+  const filterNodes = (nodes, term) => {
+    return nodes.filter(node => {
+      const nodeMatches = node.name.toLowerCase().includes(term);
+      const childMatches = node.children && filterNodes(node.children, term).length > 0;
+      return nodeMatches || childMatches;
+    });
+  };
+
   return (
-    <div><aside className='API_aside'>
+    <div>
+      <aside className='API_aside'>
         <h2>Categories</h2>
-        {/* <div className='align_centre navbar_links'>
-          <ul>
-
-            <Task_Navbarlinks link='/' title='Dummy'/>
-          </ul>
-
-
-        </div> */}
-
-
-    <ul>
-      {jsonData.map(parent => (
-        <TreeNode key={parent.id} node={parent} onNodeClick={handleNodeClick} />
-      ))}
-    </ul>
-    </aside>
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+        <ul>
+          {filteredData.map(parent => (
+            <TreeNode key={parent.id} node={parent} onNodeClick={handleNodeClick} />
+          ))}
+        </ul>
+      </aside>
     </div>
   );
+};
 
-
-}
-
-export default sidebarsection
+export default SidebarSection;
