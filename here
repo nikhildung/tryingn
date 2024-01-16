@@ -6,6 +6,7 @@ import jsonData from '../API/Sidebar.json';
 const SidebarSection = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState(jsonData);
+  const [expandedNodes, setExpandedNodes] = useState([]);
 
   const TreeNode = ({ node, onNodeClick }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -14,6 +15,14 @@ const SidebarSection = () => {
       setIsOpen(!isOpen);
       onNodeClick(node);
     };
+
+    // Automatically expand parent nodes if they contain a matching child
+    const isNodeExpanded = expandedNodes.includes(node.id);
+    React.useEffect(() => {
+      if (node.children.some(child => child.name.toLowerCase().includes(searchTerm.toLowerCase()))) {
+        setExpandedNodes((prevExpandedNodes) => [...prevExpandedNodes, node.id]);
+      }
+    }, [searchTerm, node]);
 
     return (
       <li>
@@ -47,6 +56,12 @@ const SidebarSection = () => {
     return nodes.filter(node => {
       const nodeMatches = node.name.toLowerCase().includes(term);
       const childMatches = node.children && filterNodes(node.children, term).length > 0;
+
+      if (nodeMatches) {
+        // Expand the parent node when a matching child is found
+        setExpandedNodes((prevExpandedNodes) => [...prevExpandedNodes, node.id]);
+      }
+
       return nodeMatches || childMatches;
     });
   };
