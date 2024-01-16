@@ -1,48 +1,59 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react'
+import './Sidebarsection.css'
+import Task_Navbarlinks from '../Task_Navbarlinks'
+import jsonData from '../API/Sidebar.json'
 
-const CardFilter = ({ cards }) => {
-  const [filterText, setFilterText] = useState('');
 
-  const handleFilterChange = (event) => {
-    setFilterText(event.target.value.toLowerCase());
+const sidebarsection = () => {
+  const TreeNode = ({ node, onNodeClick }) => {
+    const [isOpen, setIsOpen] = useState(false);
+  
+    const handleNodeClick = () => {
+      setIsOpen(!isOpen);
+      onNodeClick(node);
+    };
+  
+    return (
+      <li>
+        <span onClick={handleNodeClick}>{node.name}</span>
+        {isOpen && node.children.length > 0 && (
+          <ul>
+            {node.children.map(child => (
+              <TreeNode key={child.id} node={child} onNodeClick={onNodeClick} />
+            ))}
+          </ul>
+        )}
+      </li>
+    );
   };
-
-  const filteredCards = cards.filter(
-    (card) =>
-      card.title.toLowerCase().includes(filterText) ||
-      card.description.toLowerCase().includes(filterText)
-  );
-
+  
+  const handleNodeClick = (node) => {
+    console.log(`Clicked on ${node.name}`);
+    // Add your logic for handling node clicks here
+  };
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="Type to filter"
-        value={filterText}
-        onChange={handleFilterChange}
-      />
+    <div><aside className='API_aside'>
+        <h2>Categories</h2>
+        {/* <div className='align_centre navbar_links'>
+          <ul>
 
-      <div>
-        {filteredCards.map((card, index) => (
-          <div key={index}>
-            <h3>{card.title}</h3>
-            <p>{card.description}</p>
-          </div>
-        ))}
-      </div>
+            <Task_Navbarlinks link='/' title='Dummy'/>
+          </ul>
+
+
+        </div> */}
+
+
+    <ul>
+      {jsonData.map(parent => (
+        <TreeNode key={parent.id} node={parent} onNodeClick={handleNodeClick} />
+      ))}
+    </ul>
+    </aside>
     </div>
   );
-};
 
-// Example usage:
-const App = () => {
-  const exampleCards = [
-    { title: 'Card 1', description: 'Description 1' },
-    { title: 'Card 2', description: 'Description 2' },
-    // Add more cards as needed
-  ];
 
-  return <CardFilter cards={exampleCards} />;
-};
+}
 
-export default App;
+export default sidebarsection
