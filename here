@@ -1,34 +1,18 @@
+const filterNodes = (nodes, term, parentName = '') => {
+  return nodes.reduce((filtered, node) => {
+    const nodeMatches = node.name.toLowerCase().includes(term);
+    const childMatches = node.children && filterNodes(node.children, term, node.name).length > 0;
 
-[
-    {
-      "id": 1,
-      "name": "Payments",
-      "children": [
-        {
-          "id": 2,
-          "name": "CMS",
-          "children": [
-
-          ]
-        },
-        {
-          "id": 4,
-          "name": "Account",
-          "children": []
-        }
-      ]
-    },
-    {
-      "id": 5,
-      "name": "Nikhil",
-      "children": [
-        {
-          "id": 6,
-          "name": "Dung",
-          "children": []
-        }
-      ]
+    if (nodeMatches || childMatches || node.name.toLowerCase() === parentName.toLowerCase()) {
+      // Include only the current node or its parent in the result
+      filtered.push({
+        ...node,
+        children: filterNodes(node.children, term, node.name)
+      });
     }
-  ]
+
+    return filtered;
+  }, []);
+};
   
   
