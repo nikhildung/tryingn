@@ -1,6 +1,85 @@
-<body>
-  <div id="root"><div class="app"><nav class="align_centre navbar"><div class="align_centre"><a href="/"><img src="https://www.kotak.com/content/dam/Kotak/kotak-logo.png" class="navbar_heading"></a></div><div class="align_centre navbar_links"><div><a href="/" class="link_emoji">Home  </a></div><div><a href="/api" class="link_emoji">API  </a></div><div><a href="/support" class="link_emoji">Support  </a></div><div><a href="/login" class="link_emoji">Login  </a></div><div><a href="/signup" class="link_emoji">Signup  </a></div></div></nav><main><div><div><section class="API_page"><section class="API_search"><div><div class="inputcontainer"><h1>What service are you looking for?</h1><input type="text" placeholder="Filter Searches" id="searchbar"></div></div></section><div class="gridlayout"><div><aside class="API_aside"><h2>Categories</h2><input type="text" placeholder="Search..." value=""><ul><li><span>Payments</span><ul><li><span>CMS</span></li><li><span>Account</span></li></ul></li><li><span>Nikhil</span><ul><li><span>Dung</span></li></ul></li></ul></aside></div><section class="align_centre featured_products_list"><article class="product_card"><div class="product_image"><img src="https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg" alt=""></div><div class="product_details"><h3 class="product_title">Payment</h3><p class="product_desc">This is Payments API</p></div><a class="product_link" href="/Swagger">Read More</a></article><article class="product_card"><div class="product_image"><img src="https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg" alt=""></div><div class="product_details"><h3 class="product_title">Balance Enquire</h3><p class="product_desc">This is Balance Enquires API</p></div><a class="product_link" href="/Swagger">Read More</a></article><article class="product_card"><div class="product_image"><img src="https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg" alt=""></div><div class="product_details"><h3 class="product_title">UPI Collect</h3><p class="product_desc">This is UPI Collect API</p></div><a class="product_link" href="/Swagger">Read More</a></article><article class="product_card"><div class="product_image"><img src="https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg" alt=""></div><div class="product_details"><h3 class="product_title">Acuqiring</h3><p class="product_desc">This is Acuqiring API</p></div><a class="product_link" href="/Swagger">Read More</a></article><article class="product_card"><div class="product_image"><img src="https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg" alt=""></div><div class="product_details"><h3 class="product_title">Account Balance</h3><p class="product_desc">This is Account Balance API</p></div><a class="product_link" href="/Swagger">Read More</a></article><article class="product_card"><div class="product_image"><img src="https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg" alt=""></div><div class="product_details"><h3 class="product_title">24*7 Payments</h3><p class="product_desc">This is 24*7 Payments API</p></div><a class="product_link" href="/Swagger">Read More</a></article></section></div></section></div></div></main></div></div>
-  <script type="module" src="/src/main.jsx?t=1705388613350"></script>
+import React, { useState, useEffect } from 'react';
+import './Sidebarsection.css';
+import Task_Navbarlinks from '../Task_Navbarlinks';
+import jsonData from '../API/Sidebar.json';
+import './Sidebarsection.css'
 
+const SidebarSection = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredData, setFilteredData] = useState(jsonData);
 
-</body>
+  const TreeNode = ({ node, onNodeClick }) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleNodeClick = () => {
+      setIsOpen(!isOpen);
+      onNodeClick(node);
+    };
+
+    useEffect(() => {
+      // Expand the node if it's in the filtered data
+      if (filteredData.some(filteredNode => filteredNode.id === node.id)) {
+        setIsOpen(true);
+      }
+    }, [filteredData, node]);
+
+    const isNodeExpanded = isOpen || node.children.some(child => child.id === node.id && child.children && child.children.length > 0);
+
+    return (
+      <li>
+        <span onClick={handleNodeClick}>{node.name}</span>
+        {isNodeExpanded && node.children.length > 0 && (
+          <ul>
+            {node.children.map(child => (
+              <TreeNode key={child.id} node={child} onNodeClick={onNodeClick} />
+            ))}
+          </ul>
+        )}
+      </li>
+    );
+  };
+
+  const handleNodeClick = (node) => {
+    // Handle node click logic if needed
+    console.log(`Clicked on ${node.name}`);
+  };
+
+  const handleSearch = (event) => {
+    const searchTerm = event.target.value.toLowerCase();
+    setSearchTerm(searchTerm);
+
+    // Filter the data based on the search term
+    const filteredNodes = filterNodes(jsonData, searchTerm);
+    setFilteredData(filteredNodes);
+  };
+
+  const filterNodes = (nodes, term) => {
+    return nodes.filter(node => {
+      const nodeMatches = node.name.toLowerCase().includes(term);
+      const childMatches = node.children && filterNodes(node.children, term).length > 0;
+
+      return nodeMatches || childMatches;
+    });
+  };
+
+  return (
+    <div>
+      <aside className='API_aside'>
+        <h2>Categories</h2>
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+        <ul className='Trying'>
+          {filteredData.map(parent => (
+            <TreeNode key={parent.id} node={parent} onNodeClick={handleNodeClick} />
+          ))}
+        </ul>
+      </aside>
+    </div>
+  );
+};
+
+export default SidebarSection;
