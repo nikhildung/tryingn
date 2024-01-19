@@ -1,38 +1,42 @@
+const TreeNode = ({ node, onNodeClick }) => {
+  const [isOpen, setIsOpen] = useState(false);
 
-[
-    {
-      "id": 1,
-      "name": "Payments",
-      "children": [
-        {
-          "id": 2,
-          "name": "CMS",
-          "children": [
-            {
-              "id": 3,
-              "name": "24*7",
-              "children": []
-            }
-          ]
-        },
-        {
-          "id": 4,
-          "name": "Account",
-          "children": []
-        }
-      ]
-    },
-    {
-      "id": 5,
-      "name": "Nikhil",
-      "children": [
-        {
-          "id": 6,
-          "name": "Dung",
-          "children": []
-        }
-      ]
+  const handleNodeClick = () => {
+    setIsOpen(!isOpen);
+    onNodeClick(node);
+  };
+
+  useEffect(() => {
+    const shouldExpandNode = filteredData.some(filteredNode => filteredNode.id === node.id);
+
+    if (shouldExpandNode) {
+      setIsOpen(true);
+      // Expand parent nodes recursively
+      let parentNode = node;
+      while (parentNode && parentNode.children && parentNode.children.length > 0) {
+        parentNode = parentNode.children[0];
+        setIsOpen(true);
+      }
     }
-  ]
-  
-  
+  }, [filteredData, node]);
+
+  const isNodeExpanded =
+    isOpen ||
+    (node.children &&
+      node.children.some(
+        child => child.id === node.id && child.children && child.children.length > 0
+      ));
+
+  return (
+    <li>
+      <span onClick={handleNodeClick}>{node.name}</span>
+      {isNodeExpanded && node.children.length > 0 && (
+        <ul>
+          {node.children.map(child => (
+            <TreeNode key={child.id} node={child} onNodeClick={onNodeClick} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+};
