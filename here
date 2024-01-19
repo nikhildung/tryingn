@@ -11,12 +11,6 @@ const TreeNode = ({ node, onNodeClick }) => {
 
     if (shouldExpandNode) {
       setIsOpen(true);
-      // Expand all parent nodes recursively
-      let parentNode = node;
-      while (parentNode && parentNode.children && parentNode.children.length > 0) {
-        parentNode = parentNode.children[0];
-        setIsOpen(true);
-      }
     }
   }, [filteredData, node]);
 
