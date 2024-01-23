@@ -1,42 +1,103 @@
-
 [
+  {
+    "id": 1,
+    "name": "Payments",
+    "href": "/payments",
+    "children": [
+      {
+        "id": 11,
+        "name": "CMS Payments",
+        "href": "/cmspayments",
+        "children": []
+      },
+      {
+        "id": 12,
+        "name": "24*7 Payements",
+        "href": "/24*7payments",
+        "children": []
+      },
+      {
+        "id": 13,
+        "name": "Remittance",
+        "href": "/corporateremittance",
+        "children": []
+      },
+      {
+        "id": 14,
+        "name": "UPI Pay",
+        "href": "upipay",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Account Services",
+    "href": "/accountservices",
+    "children": [
+      {
+        "id": 21,
+        "name": "Balance",
+        "href": "/accountbalance",
+        "children": []
+      },
+      {
+        "id": 22,
+        "name": "Statement",
+        "href": "/accountstatement",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Collections",
+    "href": "/Collections",
+    "children": [
+      {
+        "id": 31,
+        "name": "NACH",
+        "href": "/nach",
+        "children": []
+      },
+      {
+        "id": 32,
+        "name": "E-collect",
+        "href": "/ecollect",
+        "children": []
+      },
+      {
+        "id": 33,
+        "name": "BBPS",
+        "href": "/bbps",
+        "children": []
+      },
+      {
+        "id": 34,
+        "name": "UPI Collect",
+        "href": "/upicollect",
+        "children": []
+      },
+      {
+        "id": 35,
+        "name": "UPI recurring collection mandate",
+        "href": "/UPIrecurring",
+        "children": []
+      }
+    ]
+  },
+
+{
+  "id": 4,
+  "name": "Acquiring",
+  "href": "/Acquiring",
+  "children": [
     {
-      "id": 1,
-      "name": "Payments",
-      "children": [
-        {
-          "id": 2,
-          "name": "CMS",
-          "children": [
-            {
-              "id": 3,
-              "name": "24*7",
-              "children": [
-                
-              ]
-            }
-          ]
-        },
-        {
-          "id": 4,
-          "name": "Account",
-          "children": []
-        }
-      ]
-    },
-    {
-      "id": 5,
-      "name": "Nikhil",
-      "children": [
-        {
-          "id": 6,
-          "name": "Dung",
-          "children": [
-            
-          ]
-        }
-      ]
+      "id": 41,
+      "name": "Acquiring",
+      "href": "/acquiring",
+      "children": []
     }
   ]
-  
-  
+}
+]
