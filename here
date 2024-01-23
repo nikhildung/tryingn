@@ -1,103 +1,26 @@
-[
-  {
-    "id": 1,
-    "name": "Payments",
-    "href": "/payments",
-    "children": [
-      {
-        "id": 11,
-        "name": "CMS Payments",
-        "href": "/cmspayments",
-        "children": []
-      },
-      {
-        "id": 12,
-        "name": "24*7 Payements",
-        "href": "/24*7payments",
-        "children": []
-      },
-      {
-        "id": 13,
-        "name": "Remittance",
-        "href": "/corporateremittance",
-        "children": []
-      },
-      {
-        "id": 14,
-        "name": "UPI Pay",
-        "href": "upipay",
-        "children": []
-      }
-    ]
-  },
-  {
-    "id": 2,
-    "name": "Account Services",
-    "href": "/accountservices",
-    "children": [
-      {
-        "id": 21,
-        "name": "Balance",
-        "href": "/accountbalance",
-        "children": []
-      },
-      {
-        "id": 22,
-        "name": "Statement",
-        "href": "/accountstatement",
-        "children": []
-      }
-    ]
-  },
-  {
-    "id": 3,
-    "name": "Collections",
-    "href": "/Collections",
-    "children": [
-      {
-        "id": 31,
-        "name": "NACH",
-        "href": "/nach",
-        "children": []
-      },
-      {
-        "id": 32,
-        "name": "E-collect",
-        "href": "/ecollect",
-        "children": []
-      },
-      {
-        "id": 33,
-        "name": "BBPS",
-        "href": "/bbps",
-        "children": []
-      },
-      {
-        "id": 34,
-        "name": "UPI Collect",
-        "href": "/upicollect",
-        "children": []
-      },
-      {
-        "id": 35,
-        "name": "UPI recurring collection mandate",
-        "href": "/UPIrecurring",
-        "children": []
-      }
-    ]
-  },
+import React from 'react';
 
-{
-  "id": 4,
-  "name": "Acquiring",
-  "href": "/Acquiring",
-  "children": [
-    {
-      "id": 41,
-      "name": "Acquiring",
-      "href": "/acquiring",
-      "children": []
-    }
-  ]
-}
-]
+const data = [ /* Your provided JSON data here */ ];
+
+const PaymentChildren = () => {
+  // Find the "Payments" category
+  const paymentsCategory = data.find(category => category.name === 'Payments');
+
+  // Get the children of the "Payments" category
+  const paymentChildren = paymentsCategory ? paymentsCategory.children : [];
+
+  return (
+    <div>
+      <h2>Payments Children:</h2>
+      <ul>
+        {paymentChildren.map(child => (
+          <li key={child.id}>
+            {child.name} - <a href={child.href}>{child.href}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default PaymentChildren;
