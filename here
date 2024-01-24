@@ -1,36 +1,15 @@
-[
-  { "id": 1, "name": "Home", "url": "/" },
-  { "id": 2, "name": "Category 1", "url": "/category1", "parent": 1 },
-  { "id": 3, "name": "Subcategory 1-1", "url": "/subcategory1-1", "parent": 2 },
-  { "id": 4, "name": "Page 1", "url": "/page1", "parent": 3 }
-]
-
-
-import React from 'react';
-
-const Breadcrumbs = ({ breadcrumbs }) => {
-  return (
-    <div>
-      {breadcrumbs.map(crumb => (
-        <span key={crumb.id}>
-          <a href={crumb.url}>{crumb.name}</a>
-          <span> / </span>
-        </span>
-      ))}
-    </div>
-  );
-};
-
-export default Breadcrumbs;
-
-
+// YourMainComponent.js
 import React from 'react';
 import Breadcrumbs from './Breadcrumbs';
-import jsonData from './yourBreadcrumbData.json';
 
-const App = () => {
-  // Assuming you dynamically determine the breadcrumbs for the current page
-  const currentBreadcrumbs = [...];
+const YourMainComponent = () => {
+  // Example breadcrumb data for the current page
+  const currentBreadcrumbs = [
+    { id: 1, name: 'Home', url: '/' },
+    { id: 2, name: 'Category 1', url: '/category1', parent: 1 },
+    { id: 3, name: 'Subcategory 1-1', url: '/subcategory1-1', parent: 2 },
+    { id: 4, name: 'Page 1', url: '/page1', parent: 3 }
+  ];
 
   return (
     <div>
@@ -40,4 +19,22 @@ const App = () => {
   );
 };
 
-export default App;
+export default YourMainComponent;
+
+// Breadcrumbs.js
+import React from 'react';
+
+const Breadcrumbs = ({ breadcrumbs }) => {
+  return (
+    <div>
+      {breadcrumbs.map((crumb, index) => (
+        <span key={crumb.id}>
+          <a href={crumb.url}>{crumb.name}</a>
+          {index < breadcrumbs.length - 1 && <span> / </span>}
+        </span>
+      ))}
+    </div>
+  );
+};
+
+export default Breadcrumbs;
