@@ -1,25 +1,46 @@
 // YourMainComponent.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Breadcrumbs from './Breadcrumbs';
 
 const YourMainComponent = () => {
-  // Example breadcrumb data for the current page
-  const currentBreadcrumbs = [
-    { id: 1, name: 'Home', url: '/' },
-    { id: 2, name: 'Category 1', url: '/category1', parent: 1 },
-    { id: 3, name: 'Subcategory 1-1', url: '/subcategory1-1', parent: 2 },
-    { id: 4, name: 'Page 1', url: '/page1', parent: 3 }
-  ];
+  const [breadcrumbs, setBreadcrumbs] = useState([]);
+
+  useEffect(() => {
+    // Logic to dynamically set breadcrumbs based on user navigation
+    // Example: If on the home page, set breadcrumbs to only the home link
+    setBreadcrumbs([
+      { id: 1, name: 'Home', url: '/' }
+    ]);
+    // Add more logic as needed for other pages
+  }, []); // Dependency array ensures this effect runs only once on mount
+
+  const handleCategoryClick = () => {
+    // Logic to update breadcrumbs when a category is clicked
+    setBreadcrumbs([
+      { id: 1, name: 'Home', url: '/' },
+      { id: 2, name: 'Category 1', url: '/category1' }
+    ]);
+  };
+
+  // Example function for handling home click
+  const handleHomeClick = () => {
+    setBreadcrumbs([
+      { id: 1, name: 'Home', url: '/' }
+    ]);
+  };
 
   return (
     <div>
-      <Breadcrumbs breadcrumbs={currentBreadcrumbs} />
+      <Breadcrumbs breadcrumbs={breadcrumbs} />
+      <button onClick={handleCategoryClick}>Go to Category 1</button>
+      <button onClick={handleHomeClick}>Go to Home</button>
       {/* Your other page content */}
     </div>
   );
 };
 
 export default YourMainComponent;
+
 
 // Breadcrumbs.js
 import React from 'react';
@@ -38,3 +59,9 @@ const Breadcrumbs = ({ breadcrumbs }) => {
 };
 
 export default Breadcrumbs;
+
+
+
+
+
+
