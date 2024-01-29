@@ -9,9 +9,10 @@ const TreeNode = ({ node, onToggle, searchQuery }) => {
   };
 
   const isNodeMatchingSearch = node.name.toLowerCase().includes(searchQuery.toLowerCase());
+  const hasMatchingChildren = node.children && node.children.some((child) => child.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
-    <div style={{ display: isNodeMatchingSearch ? 'block' : 'none' }}>
+    <div style={{ display: isNodeMatchingSearch || hasMatchingChildren ? 'block' : 'none' }}>
       <div onClick={handleToggle} style={{ cursor: 'pointer', fontWeight: 'bold' }}>
         {node.name}
       </div>
