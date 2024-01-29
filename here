@@ -1,30 +1,23 @@
-import React from 'react'
-import './CardSection.css'
+import React from 'react';
+import './CardSection.css';
 
-import { Link } from 'react-router-dom'
-
-
-const CardSection = ({ selectedNode }) => {
-
+const CardSection = ({ selectedNodes }) => {
   return (
+    <div>
+      <h3>Card Section</h3>
+      {selectedNodes.map(parent => (
+        <article className='product_card' key={parent.id}>
+          <div className="product_image">
+            {parent.src && <img src={parent.src} alt={parent.name} />}
+          </div>
+          <div className="product_details">
+            <h3 className="product_title">{parent.name}</h3>
+            <p className="product_desc">{parent.Description}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+};
 
-    <article className='product_card'>
-      <a href="" className='product_a'>
-      <div className="product_image">
-          {selectedNode.src && <img src={selectedNode.src} alt="" />}
-
-      </div>
-
-      <div className="product_details">
-        <h3 className="product_title">{selectedNode.name}</h3>
-        <p className="product_desc">{selectedNode.Description}</p>
-
-      </div>
-      {/* <Link  className='product_link'>Read More</Link> */}
-      </a>
-    </article>
-  )
-}
-
-export default CardSection
-
+export default CardSection;
