@@ -1,3 +1,4 @@
+// SidebarSection.jsx
 import React, { useState, useEffect } from 'react';
 import './Sidebarsection.css';
 import jsonData from '../API/Sidebar.json';
@@ -6,14 +7,12 @@ import CardSection from './CardSection';
 const SidebarSection = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState(jsonData);
-  const [selectedNode, setSelectedNode] = useState(null);
+  const [selectedNodes, setSelectedNodes] = useState([]);
 
   useEffect(() => {
     // Initially set all parent nodes as selected when the component mounts
     const allParents = jsonData.filter(node => node.children && node.children.length > 0);
-    if (allParents.length > 0) {
-      setSelectedNode(allParents[0]);
-    }
+    setSelectedNodes(allParents);
   }, []);
 
   const TreeNode = ({ node, onNodeClick }) => {
@@ -47,7 +46,7 @@ const SidebarSection = () => {
 
     return (
       <li className='Trying'>
-        <span onClick={handleNodeClick}><a >{node.name}</a></span>
+        <span onClick={handleNodeClick}><a>{node.name}</a></span>
 
         {isNodeExpanded && node.children.length > 0 && (
           <ul>
@@ -61,7 +60,7 @@ const SidebarSection = () => {
   };
 
   const handleNodeClick = (node) => {
-    setSelectedNode(node);
+    setSelectedNodes([node]);
   };
 
   const handleSearch = (event) => {
@@ -73,8 +72,8 @@ const SidebarSection = () => {
       const filteredNodes = filterNodes(jsonData, searchTerm);
       setFilteredData(filteredNodes);
 
-      // Clear selected node when performing a new search
-      setSelectedNode(null);
+      // Clear selected nodes when performing a new search
+      setSelectedNodes([]);
     }
   };
 
@@ -119,13 +118,13 @@ const SidebarSection = () => {
       </aside>
 
       <section className='featured_products_list'>
-        {selectedNode && selectedNode.children && (
-          <ul style={{ display: 'flex', justifyContent: 'space-between' }}>
-            {selectedNode.children.map(child => (
+        {selectedNodes.map(node => (
+          <ul key={node.id} style={{ display: 'flex', justifyContent: 'space-between' }}>
+            {node.children.map(child => (
               <CardSection key={child.id} selectedNode={child} />
             ))}
           </ul>
-        )}
+        ))}
       </section>
     </div>
   );
