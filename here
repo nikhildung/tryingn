@@ -17,7 +17,7 @@ const APIPage = () => {
           <Sidebarsection />
 
           <section className='align_centre featured_products_list'>
-         
+         {/* Card code inside this */}
 
           </section>
         </div>
