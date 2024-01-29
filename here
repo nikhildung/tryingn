@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './Sidebarsection.css';
-import Task_Navbarlinks from '../Task_Navbarlinks';
 import jsonData from '../API/Sidebar.json';
 import CardSection from './CardSection';
 
@@ -8,6 +7,14 @@ const SidebarSection = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState(jsonData);
   const [selectedNode, setSelectedNode] = useState(null);
+
+  useEffect(() => {
+    // Initially set all parent nodes as selected when the component mounts
+    const allParents = jsonData.filter(node => node.children && node.children.length > 0);
+    if (allParents.length > 0) {
+      setSelectedNode(allParents[0]);
+    }
+  }, []);
 
   const TreeNode = ({ node, onNodeClick }) => {
     const [isOpen, setIsOpen] = useState(true);
@@ -113,16 +120,9 @@ const SidebarSection = () => {
 
       <section className='featured_products_list'>
         {selectedNode && selectedNode.children && (
-          <ul>
+          <ul style={{ display: 'flex', justifyContent: 'space-between' }}>
             {selectedNode.children.map(child => (
-              // <CardSection key={child.id} selectedNode={child} />
-
-
-
-                  <CardSection key={child.id} selectedNode={child}/>
-
-
-
+              <CardSection key={child.id} selectedNode={child} />
             ))}
           </ul>
         )}
