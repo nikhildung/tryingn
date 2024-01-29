@@ -98,7 +98,7 @@ const SidebarSection = () => {
           type="text"
           placeholder="Search..."
           value={searchTerm}
-          onKeyPress={handleSearch}
+          onKeyUp={handleSearch}
         />
         <ul className='Trying'>
           {filteredData.map(parent => (
