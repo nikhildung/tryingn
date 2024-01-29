@@ -116,7 +116,11 @@ const SidebarSection = () => {
       </aside>
 
       <section className='featured_products_list'>
-        <CardSection selectedNodes={selectedNodes} />
+<ul className='featured_products_list'>
+            {selectedNode.children.map(child => (
+              <CardSection selectedNode={selectedNode}/>
+            ))}
+          </ul>
       </section>
     </div>
   );
