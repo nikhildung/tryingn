@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const TreeNode = ({ node, onToggle }) => {
+const TreeNode = ({ node, onToggle, searchQuery }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleToggle = () => {
@@ -8,15 +8,17 @@ const TreeNode = ({ node, onToggle }) => {
     onToggle(node.id, !isOpen);
   };
 
+  const isNodeMatchingSearch = node.name.toLowerCase().includes(searchQuery.toLowerCase());
+
   return (
-    <div>
+    <div style={{ display: isNodeMatchingSearch ? 'block' : 'none' }}>
       <div onClick={handleToggle} style={{ cursor: 'pointer', fontWeight: 'bold' }}>
         {node.name}
       </div>
       {isOpen && node.children && node.children.length > 0 && (
         <div style={{ marginLeft: '20px' }}>
           {node.children.map((child) => (
-            <TreeNode key={child.id} node={child} onToggle={onToggle} />
+            <TreeNode key={child.id} node={child} onToggle={onToggle} searchQuery={searchQuery} />
           ))}
         </div>
       )}
@@ -26,6 +28,7 @@ const TreeNode = ({ node, onToggle }) => {
 
 const TreeView = ({ data }) => {
   const [openNodes, setOpenNodes] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleToggle = (nodeId, isOpen) => {
     if (isOpen) {
@@ -35,10 +38,20 @@ const TreeView = ({ data }) => {
     }
   };
 
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
   return (
     <div>
+      <input
+        type="text"
+        placeholder="Search..."
+        value={searchQuery}
+        onChange={handleSearch}
+      />
       {data.map((node) => (
-        <TreeNode key={node.id} node={node} onToggle={handleToggle} />
+        <TreeNode key={node.id} node={node} onToggle={handleToggle} searchQuery={searchQuery} />
       ))}
     </div>
   );
