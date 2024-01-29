@@ -64,11 +64,6 @@ const SidebarSection = () => {
 
   const handleNodeClick = (node) => {
     setSelectedNode(node);
-
-    // Automatically expand the children of the "Payments" node
-    if (node.name === 'Payments' && node.children) {
-      setFilteredData((prevData) => [...prevData, ...node.children]);
-    }
   };
 
   const handleSearch = (event) => {
@@ -126,7 +121,13 @@ const SidebarSection = () => {
       </aside>
 
       <div className='CardSection'>
-        {selectedNode && <CardSection selectedNode={selectedNode} />}
+        {selectedNode && selectedNode.children && (
+          <ul>
+            {selectedNode.children.map(child => (
+              <CardSection key={child.id} selectedNode={child} />
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
