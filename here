@@ -1,21 +1,24 @@
 import React from 'react';
-import JSONTree from 'react-json-tree';
 
-const data = [
-  // ... (Your JSON data here)
-];
+const TreeNode = ({ node }) => (
+  <div>
+    <div>{node.name}</div>
+    {node.children && node.children.length > 0 && (
+      <div style={{ marginLeft: '20px' }}>
+        {node.children.map((child) => (
+          <TreeNode key={child.id} node={child} />
+        ))}
+      </div>
+    )}
+  </div>
+);
 
-const TreeView = () => {
-  const treeStyle = {
-    marginTop: '20px',
-    marginLeft: '20px',
-  };
-
-  return (
-    <div style={treeStyle}>
-      <JSONTree data={data} theme="monokai" invertTheme={false} />
-    </div>
-  );
-};
+const TreeView = ({ data }) => (
+  <div>
+    {data.map((node) => (
+      <TreeNode key={node.id} node={node} />
+    ))}
+  </div>
+);
 
 export default TreeView;
