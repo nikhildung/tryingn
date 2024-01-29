@@ -1,23 +1,125 @@
-import React from 'react';
-import './CardSection.css';
+import React, { useState, useEffect } from 'react';
+import jsonData from '../API/Sidebar.json';
+import CardSection from './CardSection';
 
-const CardSection = ({ selectedNodes }) => {
+const SidebarSection = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredData, setFilteredData] = useState(jsonData);
+  const [selectedNodes, setSelectedNodes] = useState([]);
+
+  useEffect(() => {
+    // Initially set all parent nodes as selected when the component mounts
+    const allParents = jsonData.filter(node => node.children && node.children.length > 0);
+    setSelectedNodes(allParents);
+  }, []);
+
+  const TreeNode = ({ node, onNodeClick }) => {
+    const [isOpen, setIsOpen] = useState(true);
+
+    const handleNodeClick = () => {
+      setIsOpen(!isOpen);
+      onNodeClick(node);
+    };
+
+    useEffect(() => {
+      const shouldExpandNode = filteredData.some(filteredNode => filteredNode.id === node.id);
+
+      if (shouldExpandNode) {
+        setIsOpen(true);
+        // Expand all parent nodes recursively
+        let parentNode = node;
+        while (parentNode && parentNode.children && parentNode.children.length > 0) {
+          parentNode = parentNode.children[0];
+          setIsOpen(true);
+        }
+      }
+    }, [filteredData, node]);
+
+    const isNodeExpanded =
+      isOpen ||
+      (node.children &&
+        node.children.some(
+          child => child.id === node.id && child.children && child.children.length > 0
+        ));
+
+    return (
+      <li className='Trying'>
+        <span onClick={handleNodeClick}><a href={node.href}>{node.name}</a></span>
+
+        {isNodeExpanded && node.children.length > 0 && (
+          <ul>
+            {node.children.map(child => (
+              <TreeNode key={child.id} node={child} onNodeClick={onNodeClick} />
+            ))}
+          </ul>
+        )}
+      </li>
+    );
+  };
+
+  const handleNodeClick = (node) => {
+    setSelectedNodes([node]);
+  };
+
+  const handleSearch = (event) => {
+    if (event.key === 'Enter') {
+      const searchTerm = event.target.value.toLowerCase();
+      setSearchTerm(searchTerm);
+
+      // Filter the data based on the search term
+      const filteredNodes = filterNodes(jsonData, searchTerm);
+      setFilteredData(filteredNodes);
+
+      // Clear selected node when performing a new search
+      setSelectedNodes([]);
+    }
+  };
+
+  const filterNodes = (nodes, term, parentName = '') => {
+    return nodes.reduce((filtered, node) => {
+      const nodeMatches = node.name.toLowerCase().includes(term);
+      const childMatches = node.children && filterNodes(node.children, term, node.name).length > 0;
+
+      if (nodeMatches || childMatches) {
+        // Include only the current node if it matches the search term or its children match
+        filtered.push({
+          ...node,
+          children: filterNodes(node.children, term, node.name)
+        });
+      } else if (parentName.toLowerCase().includes(term)) {
+        // Include the parent node if it matches the search term, even if its children don't match
+        filtered.push({
+          ...node,
+          children: filterNodes(node.children, term, node.name)
+        });
+      }
+
+      return filtered;
+    }, []);
+  };
+
   return (
-    <div>
-      <h3>Card Section</h3>
-      {selectedNodes.map(parent => (
-        <article className='product_card' key={parent.id}>
-          <div className="product_image">
-            {parent.src && <img src={parent.src} alt={parent.name} />}
-          </div>
-          <div className="product_details">
-            <h3 className="product_title">{parent.name}</h3>
-            <p className="product_desc">{parent.Description}</p>
-          </div>
-        </article>
-      ))}
+    <div className='gridlayout'>
+      <aside className='API_aside'>
+        <h2>Categories</h2>
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+        <ul className='Trying'>
+          {filteredData.map(parent => (
+            <TreeNode key={parent.id} node={parent} onNodeClick={handleNodeClick} />
+          ))}
+        </ul>
+      </aside>
+
+      <section className='featured_products_list'>
+        <CardSection selectedNodes={selectedNodes} />
+      </section>
     </div>
   );
 };
 
-export default CardSection;
+export default SidebarSection;
