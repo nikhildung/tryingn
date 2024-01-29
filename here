@@ -64,6 +64,11 @@ const SidebarSection = () => {
 
   const handleNodeClick = (node) => {
     setSelectedNode(node);
+
+    // Automatically expand the children of the "Payments" node
+    if (node.name === 'Payments' && node.children) {
+      setFilteredData((prevData) => [...prevData, ...node.children]);
+    }
   };
 
   const handleSearch = (event) => {
