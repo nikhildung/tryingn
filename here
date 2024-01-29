@@ -1,24 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const TreeNode = ({ node }) => (
-  <div>
-    <div>{node.name}</div>
-    {node.children && node.children.length > 0 && (
-      <div style={{ marginLeft: '20px' }}>
-        {node.children.map((child) => (
-          <TreeNode key={child.id} node={child} />
-        ))}
+const TreeNode = ({ node, onToggle }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+    onToggle(node.id, !isOpen);
+  };
+
+  return (
+    <div>
+      <div onClick={handleToggle} style={{ cursor: 'pointer', fontWeight: 'bold' }}>
+        {node.name}
       </div>
-    )}
-  </div>
-);
+      {isOpen && node.children && node.children.length > 0 && (
+        <div style={{ marginLeft: '20px' }}>
+          {node.children.map((child) => (
+            <TreeNode key={child.id} node={child} onToggle={onToggle} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
-const TreeView = ({ data }) => (
-  <div>
-    {data.map((node) => (
-      <TreeNode key={node.id} node={node} />
-    ))}
-  </div>
-);
+const TreeView = ({ data }) => {
+  const [openNodes, setOpenNodes] = useState([]);
+
+  const handleToggle = (nodeId, isOpen) => {
+    if (isOpen) {
+      setOpenNodes((prevOpenNodes) => [...prevOpenNodes, nodeId]);
+    } else {
+      setOpenNodes((prevOpenNodes) => prevOpenNodes.filter((id) => id !== nodeId));
+    }
+  };
+
+  return (
+    <div>
+      {data.map((node) => (
+        <TreeNode key={node.id} node={node} onToggle={handleToggle} />
+      ))}
+    </div>
+  );
+};
 
 export default TreeView;
