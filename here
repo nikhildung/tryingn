@@ -10,9 +10,9 @@ const SidebarSection = () => {
   const [selectedNodes, setSelectedNodes] = useState([]);
 
   useEffect(() => {
-    // Initially set all parent nodes as selected when the component mounts
-    const allParents = jsonData.filter(node => node.children && node.children.length > 0);
-    setSelectedNodes(allParents);
+    // Initially set specific parent nodes as selected when the component mounts
+    const initialNodes = jsonData.filter(node => node.name === 'Payments' || node.name === 'Account Services' || node.name === 'Collections' || node.name === 'Acquiring');
+    setSelectedNodes(initialNodes);
   }, []);
 
   const TreeNode = ({ node, onNodeClick }) => {
