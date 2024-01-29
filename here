@@ -3,9 +3,20 @@ import './Sidebarsection.css';
 import Task_Navbarlinks from '../Task_Navbarlinks';
 import jsonData from '../API/Sidebar.json';
 
+const CardSection = ({ selectedNode }) => {
+  return (
+    <div>
+      <h2>{selectedNode.name}</h2>
+      <p>{selectedNode.Description}</p>
+      {/* Add any other card details you want to display */}
+    </div>
+  );
+};
+
 const SidebarSection = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState(jsonData);
+  const [selectedNode, setSelectedNode] = useState(null);
 
   const TreeNode = ({ node, onNodeClick }) => {
     const [isOpen, setIsOpen] = useState(true);
@@ -52,8 +63,7 @@ const SidebarSection = () => {
   };
 
   const handleNodeClick = (node) => {
-    // Handle node click logic if needed
-    console.log(`Clicked on ${node.name}`);
+    setSelectedNode(node);
   };
 
   const handleSearch = (event) => {
@@ -64,6 +74,9 @@ const SidebarSection = () => {
       // Filter the data based on the search term
       const filteredNodes = filterNodes(jsonData, searchTerm);
       setFilteredData(filteredNodes);
+
+      // Clear selected node when performing a new search
+      setSelectedNode(null);
     }
   };
 
@@ -106,6 +119,10 @@ const SidebarSection = () => {
           ))}
         </ul>
       </aside>
+
+      <div className='CardSection'>
+        {selectedNode && <CardSection selectedNode={selectedNode} />}
+      </div>
     </div>
   );
 };
