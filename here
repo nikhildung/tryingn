@@ -43,6 +43,22 @@ const TreeView = ({ data }) => {
     setSearchQuery(e.target.value);
   };
 
+  const renderTreeNodes = (nodes) =>
+    nodes.map((node) => (
+      <TreeNode key={node.id} node={node} onToggle={handleToggle} searchQuery={searchQuery} />
+    ));
+
+  const filteredData = (nodes, search) => {
+    return nodes
+      .filter((node) => node.name.toLowerCase().includes(search.toLowerCase()))
+      .map((node) => ({
+        ...node,
+        children: filteredData(node.children || [], search),
+      }));
+  };
+
+  const filteredTree = filteredData(data, searchQuery);
+
   return (
     <div>
       <input
@@ -51,9 +67,7 @@ const TreeView = ({ data }) => {
         value={searchQuery}
         onChange={handleSearch}
       />
-      {data.map((node) => (
-        <TreeNode key={node.id} node={node} onToggle={handleToggle} searchQuery={searchQuery} />
-      ))}
+      {renderTreeNodes(filteredTree)}
     </div>
   );
 };
