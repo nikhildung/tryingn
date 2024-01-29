@@ -9,8 +9,8 @@ const filterNodes = (nodes, term, parentName = '') => {
         ...node,
         children: filterNodes(node.children, term, node.name)
       });
-    } else if (node.name.toLowerCase() === parentName.toLowerCase()) {
-      // Include the parent node even if it does not match the search term
+    } else if (parentName.toLowerCase().includes(term)) {
+      // Include the parent node if it matches the search term, even if its children don't match
       filtered.push({
         ...node,
         children: filterNodes(node.children, term, node.name)
