@@ -1,29 +1,30 @@
-import React from 'react'
-import Searchsection from '../API/Searchsection.jsx'
-import Sidebarsection from '../API/SidebarSection.jsx'
-import './APIPage.css'
-import CardSection from './CardSection.jsx'
-import jsonData from '../API/Sidebar.json'
+// Inside TreeNode component in Sidebarsection
+<span onClick={() => onNodeClick(node)}><a href={node.href}>{node.name}</a></span>
 
+import React, { useState } from 'react';
+import Sidebarsection from '../API/SidebarSection.jsx';
+import CardSection from './CardSection.jsx';
+import jsonData from '../API/Sidebar.json';
 
 const APIPage = () => {
+  const [selectedNode, setSelectedNode] = useState(null);
+
+  const handleNodeClick = (node) => {
+    setSelectedNode(node);
+  };
+
   return (
     <div>
-
-      {/* Section 1 will be header*/}
       <section className='API_page'>
-        {/* <section className='API_search'><Searchsection /></section> */}
         <div className='gridlayout'>
-          <Sidebarsection />
-
+          <Sidebarsection onNodeClick={handleNodeClick} />
           <section className='align_centre featured_products_list'>
-         {/* Card code inside this */}
-
+            <CardSection selectedNode={selectedNode} />
           </section>
         </div>
       </section>
     </div>
-  )
-}
+  );
+};
 
-export default APIPage
+export default APIPage;
