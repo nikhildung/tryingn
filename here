@@ -1,68 +1,146 @@
 import React, { useState } from 'react';
 import { Treebeard } from 'react-treebeard';
-import './App.css';
 
-const data = {
-  name: 'Parent 1',
-  toggled: true,
-  children: [
-    {
-      name: 'Child 1',
-      url: '/child1',
-      children: [
-        { name: 'Grandchild 1', url: '/child1/grandchild1' },
-        { name: 'Grandchild 2', url: '/child1/grandchild2' }
-      ]
-    },
-    {
-      name: 'Child 2',
-      url: '/child2',
-      children: [
-        { name: 'Grandchild 3', url: '/child2/grandchild3' },
-        { name: 'Grandchild 4', url: '/child2/grandchild4' }
-      ]
-    }
-  ]
-};
-
-const App = () => {
-  const [activeNode, setActiveNode] = useState(null);
+const TreeView = ({ data }) => {
+  const [cursor, setCursor] = useState(false);
 
   const onToggle = (node, toggled) => {
-    if (activeNode) {
-      activeNode.active = false;
+    if (cursor) {
+      cursor.active = false;
     }
     node.active = true;
     if (node.children) {
       node.toggled = toggled;
     }
-    setActiveNode(node);
-  };
-
-  const onNodeClick = (node) => {
-    if (node.url) {
-      window.location.href = node.url;
-    }
+    setCursor(node);
   };
 
   return (
-    <div className="container">
-      <div className="tree-container">
-        <Treebeard
-          data={data}
-          onToggle={onToggle}
-          onToggle={onNodeClick}
-        />
-      </div>
-      <div className="cards-container">
-        {activeNode && activeNode.children && activeNode.children.map(child => (
-          <div key={child.name} className="card">
-            {child.name}
-          </div>
-        ))}
-      </div>
+    <Treebeard
+      data={data}
+      onToggle={onToggle}
+      style={{
+        tree: {
+          base: {
+            listStyle: 'none',
+            margin: 0,
+            padding: 0,
+            color: '#9DA5AB',
+            fontFamily: 'lucida grande ,tahoma,verdana,arial,sans-serif',
+            fontSize: '14px',
+          },
+          node: {
+            base: {
+              position: 'relative',
+            },
+            link: {
+              cursor: 'pointer',
+              position: 'relative',
+              padding: '0px 5px',
+              display: 'block',
+            },
+            activeLink: {
+              background: '#31363F',
+            },
+          },
+          icon: {
+            base: {
+              position: 'absolute',
+              width: '10px',
+              height: '10px',
+            },
+            toggle: {
+              base: {
+                position: 'relative',
+                display: 'block',
+                verticalAlign: 'top',
+                marginLeft: '-5px',
+                height: '16px',
+              },
+              wrapper: {
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                margin: '-7px 0 0 -7px',
+              },
+              height: 10,
+              width: 10,
+              arrow: {
+                fill: '#9DA5AB',
+                strokeWidth: 0,
+              },
+            },
+            loading: {
+              base: {
+                position: 'absolute',
+                display: 'block',
+                top: '50%',
+                left: '50%',
+                margin: '-7px 0 0 -7px',
+              },
+              wrapper: {
+                fill: '#9DA5AB',
+                strokeWidth: 0,
+              },
+              height: 14,
+              width: 14,
+              arrow: {
+                fill: '#9DA5AB',
+                strokeWidth: 0,
+              },
+            },
+          },
+          header: {
+            base: {
+              display: 'inline-block',
+              verticalAlign: 'top',
+              color: '#9DA5AB',
+            },
+            connector: {
+              width: '2px',
+              height: '12px',
+              borderLeft: 'solid 2px black',
+              borderBottom: 'solid 2px black',
+              position: 'absolute',
+              top: '0px',
+              left: '-21px',
+            },
+            title: {
+              lineHeight: '24px',
+              verticalAlign: 'middle',
+            },
+          },
+          subtree: {
+            listStyle: 'none',
+            paddingLeft: '19px',
+          },
+          loading: {
+            color: '#E2C089',
+          },
+        },
+      }}
+    />
+  );
+};
+
+export default TreeView;
+
+import React from 'react';
+import TreeView from './TreeView'; // Adjust the path as needed
+
+const App = () => {
+  // Your JSON data
+  const jsonData = {
+    // Your JSON structure here
+  };
+
+  return (
+    <div className="app-container">
+      <h1>React Tree View Example</h1>
+      <TreeView data={jsonData} />
     </div>
   );
 };
 
 export default App;
+
