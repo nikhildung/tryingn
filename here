@@ -8,16 +8,18 @@ const data = {
   children: [
     {
       name: 'Child 1',
+      url: '/child1',
       children: [
-        { name: 'Grandchild 1' },
-        { name: 'Grandchild 2' }
+        { name: 'Grandchild 1', url: '/child1/grandchild1' },
+        { name: 'Grandchild 2', url: '/child1/grandchild2' }
       ]
     },
     {
       name: 'Child 2',
+      url: '/child2',
       children: [
-        { name: 'Grandchild 3' },
-        { name: 'Grandchild 4' }
+        { name: 'Grandchild 3', url: '/child2/grandchild3' },
+        { name: 'Grandchild 4', url: '/child2/grandchild4' }
       ]
     }
   ]
@@ -37,12 +39,19 @@ const App = () => {
     setActiveNode(node);
   };
 
+  const onNodeClick = (node) => {
+    if (node.url) {
+      window.location.href = node.url;
+    }
+  };
+
   return (
     <div className="container">
       <div className="tree-container">
         <Treebeard
           data={data}
           onToggle={onToggle}
+          onToggle={onNodeClick}
         />
       </div>
       <div className="cards-container">
@@ -57,30 +66,3 @@ const App = () => {
 };
 
 export default App;
-
-
-.container {
-  display: flex;
-  justify-content: space-between;
-}
-
-.tree-container {
-  flex: 1;
-}
-
-.cards-container {
-  flex: 2;
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.card {
-  width: 100px;
-  height: 100px;
-  margin: 10px;
-  background-color: #f0f0f0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid #ccc;
-}
