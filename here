@@ -1,146 +1,141 @@
-import React, { useState } from 'react';
-import { Treebeard } from 'react-treebeard';
+import React, { useState, useEffect } from 'react';
+import './Sidebarsection.css';
+import jsonData from '../API/Sidebar.json';
+import CardSection from './CardSection';
 
-const TreeView = ({ data }) => {
-  const [cursor, setCursor] = useState(false);
+const SidebarSection = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredData, setFilteredData] = useState(jsonData);
+  const [selectedNode, setSelectedNode] = useState(null);
 
-  const onToggle = (node, toggled) => {
-    if (cursor) {
-      cursor.active = false;
+  useEffect(() => {
+    // Initially set all parent nodes as selected when the component mounts
+    const allParents = jsonData.filter(node => node.children && node.children.length > 0);
+
+    if (allParents.length > 0) {
+      setSelectedNode(allParents);
     }
-    node.active = true;
-    if (node.children) {
-      node.toggled = toggled;
+  }, []);
+
+  const TreeNode = ({ node, onNodeClick }) => {
+    const [isOpen, setIsOpen] = useState(true);
+
+    const handleNodeClick = () => {
+      setIsOpen(!isOpen);
+      onNodeClick(node);
+    };
+
+    useEffect(() => {
+      const shouldExpandNode = filteredData.some(filteredNode => filteredNode.id === node.id);
+
+      if (shouldExpandNode) {
+        setIsOpen(true);
+        // Expand all parent nodes recursively
+        let parentNode = node;
+        while (parentNode && parentNode.children && parentNode.children.length > 0) {
+          parentNode = parentNode.children[0];
+          setIsOpen(true);
+        }
+      }
+    }, [filteredData, node]);
+
+    const isNodeExpanded =
+      isOpen ||
+      (node.children &&
+        node.children.some(
+          child => child.id === node.id && child.children && child.children.length > 0
+        ));
+
+    return (
+      <li className='Trying'>
+        <span onClick={handleNodeClick}><a >{node.name}</a></span>
+
+        {isNodeExpanded && node.children.length > 0 && (
+          <ul>
+            {node.children.map(child => (
+              <TreeNode key={child.id} node={child} onNodeClick={onNodeClick} />
+            ))}
+          </ul>
+        )}
+      </li>
+    );
+  };
+
+  const handleNodeClick = (node) => {
+    setSelectedNode(node);
+    if(node.href){
+
+        window.location.href = 'apitemplate'
     }
-    setCursor(node);
+    // if (node.children && node.children.length >0){
+    //   setSelectedNode(node)
+    //   setFilteredData(node.children)
+    // }
+    // else if (node.href){
+    // }
+
+  };
+
+  const handleSearch = (event) => {
+    const searchTerm = event.target.value.toLowerCase();
+    setSearchTerm(searchTerm);
+
+    // Filter the data based on the search term
+    const filteredNodes = filterNodes(jsonData, searchTerm);
+    setFilteredData(filteredNodes);
+  };
+
+  const filterNodes = (nodes, term, parentName = '') => {
+    return nodes.reduce((filtered, node) => {
+      const nodeMatches = node.name.toLowerCase().includes(term);
+      const childMatches = node.children && filterNodes(node.children, term, node.name).length > 0;
+
+      if (nodeMatches || childMatches) {
+        // Include only the current node if it matches the search term or its children match
+        filtered.push({
+          ...node,
+          children: filterNodes(node.children, term, node.name)
+        });
+      } else if (parentName.toLowerCase().includes(term)) {
+        // Include the parent node if it matches the search term, even if its children don't match
+        filtered.push({
+          ...node,
+          children: filterNodes(node.children, term, node.name)
+        });
+      }
+
+      return filtered;
+    }, []);
   };
 
   return (
-    <Treebeard
-      data={data}
-      onToggle={onToggle}
-      style={{
-        tree: {
-          base: {
-            listStyle: 'none',
-            margin: 0,
-            padding: 0,
-            color: '#9DA5AB',
-            fontFamily: 'lucida grande ,tahoma,verdana,arial,sans-serif',
-            fontSize: '14px',
-          },
-          node: {
-            base: {
-              position: 'relative',
-            },
-            link: {
-              cursor: 'pointer',
-              position: 'relative',
-              padding: '0px 5px',
-              display: 'block',
-            },
-            activeLink: {
-              background: '#31363F',
-            },
-          },
-          icon: {
-            base: {
-              position: 'absolute',
-              width: '10px',
-              height: '10px',
-            },
-            toggle: {
-              base: {
-                position: 'relative',
-                display: 'block',
-                verticalAlign: 'top',
-                marginLeft: '-5px',
-                height: '16px',
-              },
-              wrapper: {
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                margin: '-7px 0 0 -7px',
-              },
-              height: 10,
-              width: 10,
-              arrow: {
-                fill: '#9DA5AB',
-                strokeWidth: 0,
-              },
-            },
-            loading: {
-              base: {
-                position: 'absolute',
-                display: 'block',
-                top: '50%',
-                left: '50%',
-                margin: '-7px 0 0 -7px',
-              },
-              wrapper: {
-                fill: '#9DA5AB',
-                strokeWidth: 0,
-              },
-              height: 14,
-              width: 14,
-              arrow: {
-                fill: '#9DA5AB',
-                strokeWidth: 0,
-              },
-            },
-          },
-          header: {
-            base: {
-              display: 'inline-block',
-              verticalAlign: 'top',
-              color: '#9DA5AB',
-            },
-            connector: {
-              width: '2px',
-              height: '12px',
-              borderLeft: 'solid 2px black',
-              borderBottom: 'solid 2px black',
-              position: 'absolute',
-              top: '0px',
-              left: '-21px',
-            },
-            title: {
-              lineHeight: '24px',
-              verticalAlign: 'middle',
-            },
-          },
-          subtree: {
-            listStyle: 'none',
-            paddingLeft: '19px',
-          },
-          loading: {
-            color: '#E2C089',
-          },
-        },
-      }}
-    />
-  );
-};
+    <div className='gridlayout'>
+      <aside className='API_aside'>
+        <h2>Categories</h2>
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+        <ul className='Trying'>
+          {filteredData.map(parent => (
+            <TreeNode key={parent.id} node={parent} onNodeClick={handleNodeClick} />
+          ))}
+        </ul>
+      </aside>
 
-export default TreeView;
-
-import React from 'react';
-import TreeView from './TreeView'; // Adjust the path as needed
-
-const App = () => {
-  // Your JSON data
-  const jsonData = {
-    // Your JSON structure here
-  };
-
-  return (
-    <div className="app-container">
-      <h1>React Tree View Example</h1>
-      <TreeView data={jsonData} />
+      <section className='featured_products_list'>
+        {selectedNode && selectedNode.children && (
+          <ul className='featured_products_list'>
+            {selectedNode.children.map(child => (
+              <CardSection key={child.id} selectedNode={child} />
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
 };
 
-export default App;
-
+export default SidebarSection;
