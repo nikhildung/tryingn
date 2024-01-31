@@ -1,37 +1,32 @@
-// Navbarlinks.js
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import './Navbarlinks.css';
+import React from "react";
+import "./Navbar.css";
+import Task_Navbarlinks from "./Navbarlinks";
 
-const DropdownMenu = () => {
-  // Your dropdown menu items and logic go here
+const Navbar = () => {
   return (
-    <div className="dropdown-menu">
-      <Link to="/api/endpoint1">Endpoint 1</Link>
-      <Link to="/api/endpoint2">Endpoint 2</Link>
-      {/* Add more links as needed */}
-    </div>
+
+
+    <nav className="align_centre navbar">
+      <div className="align_centre">
+        <a href="/">
+          {/* adding kotak logo in the header */}
+          <img
+            src="https://www.kotak.com/content/dam/Kotak/kotak-logo.png"
+            className="navbar_heading"
+          ></img>
+        </a>
+      </div>
+
+      {/* adding the a tags */}
+      <div className="align_centre navbar_links">
+        <Task_Navbarlinks link="/" title="Home" />
+        <Task_Navbarlinks link="/api" title="API" />
+        <Task_Navbarlinks link="/support" title="Support" />
+        <Task_Navbarlinks link="/login" title="Sign-in" />
+        <Task_Navbarlinks link="/signup" title="Sign-up" />
+      </div>
+    </nav>
   );
 };
 
-const Navbarlinks = ({ link, title }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const handleDropdownToggle = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
-  return (
-    <div className="navbar-link" onMouseEnter={handleDropdownToggle} onMouseLeave={handleDropdownToggle}>
-      {link ? (
-        <Link to={link}>{title}</Link>
-      ) : (
-        <span className="link_emoji">{title}</span>
-      )}
-
-      {isDropdownOpen && <DropdownMenu />}
-    </div>
-  );
-};
-
-export default Navbarlinks;
+export default Navbar;
