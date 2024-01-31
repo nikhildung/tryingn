@@ -1,7 +1,7 @@
 // Navbar.js
 import React from "react";
 import "./Navbar.css";
-import TaskNavbarlinks from "./Navbarlinks";
+import Navbarlinks from "./Navbarlinks";
 import Dropdown from "./Dropdown";
 
 const Navbar = () => {
@@ -23,13 +23,12 @@ const Navbar = () => {
       </div>
 
       <div className="align_centre navbar_links">
-        <TaskNavbarlinks link="/" title="Home" />
-        <TaskNavbarlinks link="/api" title="API" dropdownOptions={exploreApiOptions} />
-        <TaskNavbarlinks link="/support" title="Support" />
-        <TaskNavbarlinks link="/login" title="Sign-in" />
-        <TaskNavbarlinks link="/signup" title="Sign-up" />
+        <Navbarlinks link="/" title="Home" />
+        <Navbarlinks link="/api" title="API" dropdownOptions={exploreApiOptions} />
+        <Navbarlinks link="/support" title="Support" />
+        <Navbarlinks link="/login" title="Sign-in" />
+        <Navbarlinks link="/signup" title="Sign-up" />
       </div>
-      <Dropdown options={exploreApiOptions} />
     </nav>
   );
 };
@@ -37,45 +36,34 @@ const Navbar = () => {
 export default Navbar;
 
 
-/* Dropdown.css */
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  display: none;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 1;
-}
+// Navbarlinks.js
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import Dropdown from "./Dropdown";
+import "./Navbarlinks.css";
 
-.dropdown-menu a {
-  display: block;
-  padding: 10px;
-  text-decoration: none;
-  color: #333;
-  transition: background-color 0.3s ease;
-}
+const Navbarlinks = ({ link, title, dropdownOptions }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-.dropdown-menu a:hover {
-  background-color: #f5f5f5;
-}
+  const handleDropdownOpen = () => {
+    setIsDropdownOpen(true);
+  };
 
+  const handleDropdownClose = () => {
+    setIsDropdownOpen(false);
+  };
 
-// Dropdown.js
-import React from 'react';
-import { Link } from 'react-router-dom';
-import './Dropdown.css';
-
-const Dropdown = ({ options }) => {
   return (
-    <div className="dropdown-menu">
-      {options.map((option, index) => (
-        <Link key={index} to={option.link}>
-          {option.title}
-        </Link>
-      ))}
+    <div className="navbar-link" onMouseEnter={handleDropdownOpen} onMouseLeave={handleDropdownClose}>
+      {link ? (
+        <Link to={link}>{title}</Link>
+      ) : (
+        <span className="link_emoji">{title}</span>
+      )}
+
+      {dropdownOptions && isDropdownOpen && <Dropdown options={dropdownOptions} />}
     </div>
   );
 };
 
-export default Dropdown;
+export default Navbarlinks;
