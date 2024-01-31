@@ -1,32 +1,10 @@
-import React from "react";
-import "./Navbar.css";
-import Task_Navbarlinks from "./Navbarlinks";
+import React from 'react'
+import './Navbarlinks.css'
 
-const Navbar = () => {
+const Navbarlinks = ({link,title}) => {
   return (
+    <div><a href={link} className="link_emoji">{title}  </a></div>
+  )
+}
 
-
-    <nav className="align_centre navbar">
-      <div className="align_centre">
-        <a href="/">
-          {/* adding kotak logo in the header */}
-          <img
-            src="https://www.kotak.com/content/dam/Kotak/kotak-logo.png"
-            className="navbar_heading"
-          ></img>
-        </a>
-      </div>
-
-      {/* adding the a tags */}
-      <div className="align_centre navbar_links">
-        <Task_Navbarlinks link="/" title="Home" />
-        <Task_Navbarlinks link="/api" title="API" />
-        <Task_Navbarlinks link="/support" title="Support" />
-        <Task_Navbarlinks link="/login" title="Sign-in" />
-        <Task_Navbarlinks link="/signup" title="Sign-up" />
-      </div>
-    </nav>
-  );
-};
-
-export default Navbar;
+export default Navbarlinks
