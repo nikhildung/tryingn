@@ -1,18 +1,21 @@
-// App.js
+// ExploreApiPage.js
 import React from 'react';
-import TreeBeardExample from './TreeBeardExample';
+import CardSection from './CardSection';
 import data from './yourJsonFile.json'; // Import your JSON data
 
-const App = () => {
+const ExploreApiPage = () => {
+  // Set up initial selectedNode based on your requirements
+  const initialSelectedNode = data[0].children[0]; // Change this based on your data structure
+
   return (
-    <div>
-      <h1>TreeBeard Example</h1>
-      <TreeBeardExample data={data} />
+    <div className="explore-api-page">
+      <h2>Explore API Page</h2>
+      <CardSection selectedNode={initialSelectedNode} />
     </div>
   );
 };
 
-export default App;
+export default ExploreApiPage;
 
 
 // CardSection.js
@@ -39,13 +42,13 @@ const CardSection = ({ selectedNode }) => {
 
 export default CardSection;
 
-
-// TreeBeardExample.js
+// TreePage.js
 import React, { useState } from 'react';
 import { Treebeard } from 'react-treebeard';
 import CardSection from './CardSection';
+import data from './yourJsonFile.json'; // Import your JSON data
 
-const TreeBeardExample = ({ data }) => {
+const TreePage = () => {
   const [selectedNode, setSelectedNode] = useState(null);
 
   const onToggle = (node, toggled) => {
@@ -57,11 +60,11 @@ const TreeBeardExample = ({ data }) => {
   };
 
   return (
-    <div className="tree-container">
-      <div className="tree-sidebar">
+    <div className="page-container">
+      <div className="tree-container">
         <Treebeard data={data} onToggle={onToggle} />
       </div>
-      <div className="tree-content">
+      <div className="card-container">
         {selectedNode && selectedNode.children && (
           <CardSection selectedNode={selectedNode} />
         )}
@@ -70,4 +73,6 @@ const TreeBeardExample = ({ data }) => {
   );
 };
 
-export default TreeBeardExample;
+export default TreePage;
+
+
