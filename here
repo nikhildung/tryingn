@@ -1,57 +1,86 @@
-import React from 'react';
-import Box from '@mui/material/Box';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { TreeView, TreeItem } from '@mui/material';
+import React, { useState } from 'react';
+import { Treebeard } from 'react-treebeard';
+import './App.css';
 
-const data = [
-  {
-    "id": 1,
-    "src": "...",
-    "name": "Payments",
-    "href": null,
-    "Description": "This is Payments API",
-    "data": {
-      "children": [
-        {
-          "id": 11,
-          "src": "...",
-          "name": "CMS Payments",
-          "href": "/cmspayments",
-          "Description": "This is CMS Payments API",
-          "data": {}
-        },
-        // ... (other children)
+const data = {
+  name: 'Parent 1',
+  toggled: true,
+  children: [
+    {
+      name: 'Child 1',
+      children: [
+        { name: 'Grandchild 1' },
+        { name: 'Grandchild 2' }
+      ]
+    },
+    {
+      name: 'Child 2',
+      children: [
+        { name: 'Grandchild 3' },
+        { name: 'Grandchild 4' }
       ]
     }
-  },
-  // ... (other nodes)
-];
+  ]
+};
 
-const renderTree = (nodes) => (
-  <TreeItem
-    key={nodes.id.toString()} // Convert id to string to avoid key warning
-    nodeId={nodes.id.toString()}
-    label={nodes.name}
-  >
-    {Array.isArray(nodes.data.children)
-      ? nodes.data.children.map((node) => renderTree(node))
-      : null}
-  </TreeItem>
-);
+const App = () => {
+  const [activeNode, setActiveNode] = useState(null);
 
-const MuiTreeView = () => {
+  const onToggle = (node, toggled) => {
+    if (activeNode) {
+      activeNode.active = false;
+    }
+    node.active = true;
+    if (node.children) {
+      node.toggled = toggled;
+    }
+    setActiveNode(node);
+  };
+
   return (
-    <Box sx={{ flexGrow: 1, maxWidth: 300 }}>
-      <TreeView
-        aria-label="rich object"
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
-      >
-        {renderTree({ data })}
-      </TreeView>
-    </Box>
+    <div className="container">
+      <div className="tree-container">
+        <Treebeard
+          data={data}
+          onToggle={onToggle}
+        />
+      </div>
+      <div className="cards-container">
+        {activeNode && activeNode.children && activeNode.children.map(child => (
+          <div key={child.name} className="card">
+            {child.name}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 
-export default MuiTreeView;
+export default App;
+
+
+.container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.tree-container {
+  flex: 1;
+}
+
+.cards-container {
+  flex: 2;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.card {
+  width: 100px;
+  height: 100px;
+  margin: 10px;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ccc;
+}
