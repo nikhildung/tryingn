@@ -1,32 +1,81 @@
+// Navbar.js
 import React from "react";
 import "./Navbar.css";
-import Task_Navbarlinks from "./Navbarlinks";
+import TaskNavbarlinks from "./Navbarlinks";
+import Dropdown from "./Dropdown";
 
 const Navbar = () => {
+  const exploreApiOptions = [
+    { title: "Explore API", link: "/explore-api" },
+    // Add more options if needed
+  ];
+
   return (
-
-
     <nav className="align_centre navbar">
       <div className="align_centre">
         <a href="/">
-          {/* adding kotak logo in the header */}
           <img
             src="https://www.kotak.com/content/dam/Kotak/kotak-logo.png"
             className="navbar_heading"
+            alt="Kotak Logo"
           ></img>
         </a>
       </div>
 
-      {/* adding the a tags */}
       <div className="align_centre navbar_links">
-        <Task_Navbarlinks link="/" title="Home" />
-        <Task_Navbarlinks link="/api" title="API" />
-        <Task_Navbarlinks link="/support" title="Support" />
-        <Task_Navbarlinks link="/login" title="Sign-in" />
-        <Task_Navbarlinks link="/signup" title="Sign-up" />
+        <TaskNavbarlinks link="/" title="Home" />
+        <TaskNavbarlinks link="/api" title="API" dropdownOptions={exploreApiOptions} />
+        <TaskNavbarlinks link="/support" title="Support" />
+        <TaskNavbarlinks link="/login" title="Sign-in" />
+        <TaskNavbarlinks link="/signup" title="Sign-up" />
       </div>
+      <Dropdown options={exploreApiOptions} />
     </nav>
   );
 };
 
 export default Navbar;
+
+
+/* Dropdown.css */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  display: none;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 10px;
+  text-decoration: none;
+  color: #333;
+  transition: background-color 0.3s ease;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f5f5f5;
+}
+
+
+// Dropdown.js
+import React from 'react';
+import { Link } from 'react-router-dom';
+import './Dropdown.css';
+
+const Dropdown = ({ options }) => {
+  return (
+    <div className="dropdown-menu">
+      {options.map((option, index) => (
+        <Link key={index} to={option.link}>
+          {option.title}
+        </Link>
+      ))}
+    </div>
+  );
+};
+
+export default Dropdown;
