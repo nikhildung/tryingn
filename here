@@ -1,69 +1,135 @@
-// Navbar.js
-import React from "react";
-import "./Navbar.css";
-import Navbarlinks from "./Navbarlinks";
-import Dropdown from "./Dropdown";
+[
 
-const Navbar = () => {
-  const exploreApiOptions = [
-    { title: "Explore API", link: "/explore-api" },
-    // Add more options if needed
-  ];
-
-  return (
-    <nav className="align_centre navbar">
-      <div className="align_centre">
-        <a href="/">
-          <img
-            src="https://www.kotak.com/content/dam/Kotak/kotak-logo.png"
-            className="navbar_heading"
-            alt="Kotak Logo"
-          ></img>
-        </a>
-      </div>
-
-      <div className="align_centre navbar_links">
-        <Navbarlinks link="/" title="Home" />
-        <Navbarlinks link="/api" title="API" dropdownOptions={exploreApiOptions} />
-        <Navbarlinks link="/support" title="Support" />
-        <Navbarlinks link="/login" title="Sign-in" />
-        <Navbarlinks link="/signup" title="Sign-up" />
-      </div>
-    </nav>
-  );
-};
-
-export default Navbar;
-
-
-// Navbarlinks.js
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import Dropdown from "./Dropdown";
-import "./Navbarlinks.css";
-
-const Navbarlinks = ({ link, title, dropdownOptions }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const handleDropdownOpen = () => {
-    setIsDropdownOpen(true);
-  };
-
-  const handleDropdownClose = () => {
-    setIsDropdownOpen(false);
-  };
-
-  return (
-    <div className="navbar-link" onMouseEnter={handleDropdownOpen} onMouseLeave={handleDropdownClose}>
-      {link ? (
-        <Link to={link}>{title}</Link>
-      ) : (
-        <span className="link_emoji">{title}</span>
-      )}
-
-      {dropdownOptions && isDropdownOpen && <Dropdown options={dropdownOptions} />}
-    </div>
-  );
-};
-
-export default Navbarlinks;
+  {
+    "id": 1,
+    "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+    "name": "Payments",
+    "href": null,
+    "Description": "This is Payments API",
+    "children": [
+      {
+        "id": 11,
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "CMS Payments",
+        "href": "/cmspayments",
+        "Description": "This is CMS Payments API",
+        "children": []
+      },
+      {
+        "id": 12,
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "24*7 Payments",
+        "href": "/24*7payments",
+        "Description": "This is 24*7 Payments API",
+        "children": []
+      },
+      {
+        "id": 13,
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "Remittance",
+        "href": "/corporateremittance",
+        "Description": "This is Remittance Payments API",
+        "children": []
+      },
+      {
+        "id": 14,
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "UPI Pay",
+        "href": "upipay",
+        "Description": "This is UPI Payments API",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+    "name": "Account Services",
+    "href": null,
+    "Description": "This is Account Services API",
+    "children": [
+      {
+        "id": 21,
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "Balance",
+        "href": "/accountbalance",
+        "Description": "This is Account Balance API",
+        "children": []
+      },
+      {
+        "id": 22,
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "Statement",
+        "href": "/accountstatement",
+        "Description": "This is Account Statements API",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+    "name": "Collections",
+    "href": null,
+    "Description": "This is Collection API",
+    "children": [
+      {
+        "id": 31,
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "NACH",
+        "href": "/nach",
+        "Description": "This is NACH API",
+        "children": []
+      },
+      {
+        "id": 32,
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "E-collect",
+        "href": "/ecollect",
+        "Description": "This is E-collect API",
+        "children": []
+      },
+      {
+        "id": 33,
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "BBPS",
+        "href": "/bbps",
+        "Description": "This is BBPS API",
+        "children": []
+      },
+      {
+        "id": 34,
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "UPI Collect",
+        "href": "/upicollect",
+        "Description": "This is UPI Collect API",
+        "children": []
+      },
+      {
+        "id": 35,
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "recurring",
+        "href": "/UPIrecurring",
+        "Description": "This is UPI recurring API",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+    "name": "Acquiring",
+    "href": null,
+    "Description": "This is Acquiring API",
+    "children": [
+      {
+        "id": 41,
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "Acquiring",
+        "href": "/acquiring",
+        "Description": "This is Acquiring API",
+        "children": []
+      }
+    ]
+  }
+]
