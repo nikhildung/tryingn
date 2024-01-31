@@ -1,10 +1,37 @@
-import React from 'react'
-import './Navbarlinks.css'
+// Navbarlinks.js
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import './Navbarlinks.css';
 
-const Navbarlinks = ({link,title}) => {
+const DropdownMenu = () => {
+  // Your dropdown menu items and logic go here
   return (
-    <div><a href={link} className="link_emoji">{title}  </a></div>
-  )
-}
+    <div className="dropdown-menu">
+      <Link to="/api/endpoint1">Endpoint 1</Link>
+      <Link to="/api/endpoint2">Endpoint 2</Link>
+      {/* Add more links as needed */}
+    </div>
+  );
+};
 
-export default Navbarlinks
+const Navbarlinks = ({ link, title }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const handleDropdownToggle = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  return (
+    <div className="navbar-link" onMouseEnter={handleDropdownToggle} onMouseLeave={handleDropdownToggle}>
+      {link ? (
+        <Link to={link}>{title}</Link>
+      ) : (
+        <span className="link_emoji">{title}</span>
+      )}
+
+      {isDropdownOpen && <DropdownMenu />}
+    </div>
+  );
+};
+
+export default Navbarlinks;
