@@ -2,142 +2,13 @@
 import React, { useState } from 'react';
 import { TreeView } from '@mui/x-tree-view/TreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-import { Spa } from '@mui/icons-material';
-const data = [
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
-    {
-      "id": 1,
-      "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
-      "name": "Payments",
-      "href": null,
-      "Description": "This is Payments API",
-      "children": [
-        {
-          "id": 11,
-          "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
-          "name": "CMS Payments",
-          "href": "/apitemplate",
-          "Description": "This is CMS Payments API",
-          "children": []
-        },
-        {
-          "id": 12,
-          "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
-          "name": "24*7 Payments",
-          "href": "/24*7payments",
-          "Description": "This is 24*7 Payments API",
-          "children": []
-        },
-        {
-          "id": 13,
-          "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
-          "name": "Remittance",
-          "href": "/corporateremittance",
-          "Description": "This is Remittance Payments API",
-          "children": []
-        },
-        {
-          "id": 14,
-          "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
-          "name": "UPI Pay",
-          "href": "upipay",
-          "Description": "This is UPI Payments API",
-          "children": []
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
-      "name": "Account Services",
-      "href": null,
-      "Description": "This is Account Services API",
-      "children": [
-        {
-          "id": 21,
-          "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
-          "name": "Balance",
-          "href": "/accountbalance",
-          "Description": "This is Account Balance API",
-          "children": []
-        },
-        {
-          "id": 22,
-          "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
-          "name": "Statement",
-          "href": "/accountstatement",
-          "Description": "This is Account Statements API",
-          "children": []
-        }
-      ]
-    },
-    {
-      "id": 3,
-      "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
-      "name": "Collections",
-      "href": null,
-      "Description": "This is Collection API",
-      "children": [
-        {
-          "id": 31,
-          "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
-          "name": "NACH",
-          "href": "/nach",
-          "Description": "This is NACH API",
-          "children": []
-        },
-        {
-          "id": 32,
-          "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
-          "name": "E-collect",
-          "href": "/ecollect",
-          "Description": "This is E-collect API",
-          "children": []
-        },
-        {
-          "id": 33,
-          "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
-          "name": "BBPS",
-          "href": "/bbps",
-          "Description": "This is BBPS API",
-          "children": []
-        },
-        {
-          "id": 34,
-          "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
-          "name": "UPI Collect",
-          "href": "/upicollect",
-          "Description": "This is UPI Collect API",
-          "children": []
-        },
-        {
-          "id": 35,
-          "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
-          "name": "recurring",
-          "href": "/UPIrecurring",
-          "Description": "This is UPI recurring API",
-          "children": []
-        }
-      ]
-    },
-    {
-      "id": 4,
-      "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
-      "name": "Acquiring",
-      "href": null,
-      "Description": "This is Acquiring API",
-      "children": [
-        {
-          "id": 41,
-          "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
-          "name": "Acquiring",
-          "href": "/acquiring",
-          "Description": "This is Acquiring API",
-          "children": []
-        }
-      ]
-    }
-  ]
+const data = [
+  // Your data array here...
+];
+
 const App = () => {
   const [selectedNode, setSelectedNode] = useState(null);
 
@@ -146,8 +17,15 @@ const App = () => {
   };
 
   const renderTree = (nodes) => (
-    <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name}>
-      {Array.isArray(nodes.children)
+    <TreeItem
+      key={nodes.id}
+      nodeId={nodes.id.toString()}
+      label={nodes.name}
+      onLabelClick={(e) => handleNodeSelect(e, nodes.id)}
+      icon={nodes.children ? <ArrowRightIcon /> : null}
+      endIcon={nodes.children ? <ArrowDropDownIcon /> : null}
+    >
+      {Array.isArray(nodes.children) && nodes.children.length > 0
         ? nodes.children.map((node) => renderTree(node))
         : null}
     </TreeItem>
@@ -156,14 +34,13 @@ const App = () => {
   return (
     <div>
       <TreeView
-        defaultCollapseIcon={<div>-</div>}
-        defaultExpandIcon={<div>+</div>}
-        selected={selectedNode}
+        defaultCollapseIcon={<ArrowDropDownIcon />}
+        defaultExpandIcon={<ArrowRightIcon />}
+        selected={selectedNode ? selectedNode.toString() : undefined}
         onNodeSelect={handleNodeSelect}
       >
         {data.map((node) => renderTree(node))}
       </TreeView>
-
     </div>
   );
 };
