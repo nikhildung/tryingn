@@ -6,48 +6,7 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 const data = [
-  {
-    "id": 1,
-    "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
-    "name": "Payments",
-    "href": null,
-    "Description": "This is Payments API",
-    "children": [
-      {
-        "id": 11,
-        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
-        "name": "CMS Payments",
-        "href": "/apitemplate",
-        "Description": "This is CMS Payments API",
-        "children": []
-      },
-      {
-        "id": 12,
-        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
-        "name": "24*7 Payments",
-        "href": "/24*7payments",
-        "Description": "This is 24*7 Payments API",
-        "children": []
-      },
-      {
-        "id": 13,
-        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
-        "name": "Remittance",
-        "href": "/corporateremittance",
-        "Description": "This is Remittance Payments API",
-        "children": []
-      },
-      {
-        "id": 14,
-        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
-        "name": "UPI Pay",
-        "href": "upipay",
-        "Description": "This is UPI Payments API",
-        "children": []
-      }
-    ]
-  },
-  // ... (other data entries)
+  // Your data array here...
 ];
 
 const App = () => {
@@ -66,7 +25,7 @@ const App = () => {
       icon={nodes.children ? <ArrowRightIcon /> : null}
       endIcon={nodes.children ? <ArrowDropDownIcon /> : null}
     >
-      {Array.isArray(nodes.children)
+      {Array.isArray(nodes.children) && nodes.children.length > 0
         ? nodes.children.map((node) => renderTree(node))
         : null}
     </TreeItem>
