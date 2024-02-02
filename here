@@ -35,7 +35,13 @@ const TreeView = () => {
     <div className="gridlayout">
       <aside className="API_aside">
         <h2>Categories</h2>
-        <Treebeard data={data} onToggle={(node, toggled) => handleToggle(node, toggled)} />
+        <ul className="featured_products_list">
+          {data.children.map((node) => (
+            <li key={node.id} onClick={() => handleToggle(node, true)}>
+              {node.name}
+            </li>
+          ))}
+        </ul>
       </aside>
 
       <section className="featured_products_list">
