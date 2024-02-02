@@ -31,7 +31,9 @@ function App() {
     <div className="container">
       <div className="tree-container">
         <TreeView
-          data={jsonData}
+          dataSource={jsonData}
+          keyExpr="id"  // Use 'id' as the key
+          parentIdExpr="categoryId"  // Use 'categoryId' as the parent ID
           onToggle={onToggle}
           itemRender={itemTemplate}
         />
