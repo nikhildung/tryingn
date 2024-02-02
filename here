@@ -46,7 +46,25 @@ const TreeView = () => {
         },
         toggle: {
           base: {
-            display: 'none', // Hide toggle for all nodes by default
+            position: 'relative',
+            display: 'inline-block',
+            verticalAlign: 'top',
+            marginLeft: '-5px',
+            height: '24px',
+            width: '24px',
+          },
+          wrapper: {
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            margin: '-7px 0 0 -7px',
+            height: '14px',
+          },
+          height: 14,
+          width: 14,
+          arrow: {
+            fill: '#9DA5AB',
+            strokeWidth: 0,
           },
         },
       },
