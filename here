@@ -156,8 +156,8 @@ const App = () => {
   return (
     <div>
       <TreeView
-        defaultCollapseIcon={<span>-</span>}
-        defaultExpandIcon={<span>+</span>}
+        defaultCollapseIcon={<div>-</div>}
+        defaultExpandIcon={<div>+</div>}
         selected={selectedNode}
         onNodeSelect={handleNodeSelect}
       >
