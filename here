@@ -1,52 +1,62 @@
 // App.js
 import React, { useState } from 'react';
-import TreeView from 'devextreme-react/tree-view';
-import './App.css';
+import { TreeView, TreeItem } from '@mui/material';
 
-import jsonData from './data.json';
+const data = [
+  {
+    id: 1,
+    name: 'Parent 1',
+    children: [
+      { id: 2, name: 'Child 1' },
+      { id: 3, name: 'Child 2' },
+    ],
+  },
+  {
+    id: 4,
+    name: 'Parent 2',
+    children: [
+      {
+        id: 5,
+        name: 'Child 3',
+        children: [
+          { id: 6, name: 'Grandchild 1' },
+          { id: 7, name: 'Grandchild 2' },
+        ],
+      },
+    ],
+  },
+];
 
-const itemTemplate = (item) => {
-  if (item.Description) {
-    return `${item.name} - ${item.Description}`;
-  } else {
-    return `${item.name}`;
-  }
-};
+const App = () => {
+  const [selectedNode, setSelectedNode] = useState(null);
 
-function App() {
-  const [activeNode, setActiveNode] = useState(null);
-
-  const onToggle = (node, toggled) => {
-    if (activeNode) {
-      activeNode.active = false;
-    }
-    node.active = true;
-    if (node.children) {
-      node.toggled = toggled;
-    }
-    setActiveNode(node);
+  const handleNodeSelect = (event, nodeId) => {
+    setSelectedNode(nodeId);
   };
 
+  const renderTree = (nodes) => (
+    <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name}>
+      {Array.isArray(nodes.children)
+        ? nodes.children.map((node) => renderTree(node))
+        : null}
+    </TreeItem>
+  );
+
   return (
-    <div className="container">
-      <div className="tree-container">
-        <TreeView
-          dataSource={jsonData}
-          keyExpr="id"  // Use 'id' as the key
-          parentIdExpr="categoryId"  // Use 'categoryId' as the parent ID
-          onToggle={onToggle}
-          itemRender={itemTemplate}
-        />
-      </div>
-      <div className="cards-container">
-        {activeNode && activeNode.children && activeNode.children.map(child => (
-          <div key={child.name} className="card">
-            {child.name}
-          </div>
-        ))}
+    <div>
+      <TreeView
+        defaultCollapseIcon={<span>-</span>}
+        defaultExpandIcon={<span>+</span>}
+        selected={selectedNode}
+        onNodeSelect={handleNodeSelect}
+      >
+        {data.map((node) => renderTree(node))}
+      </TreeView>
+      <div>
+        Selected Node: {selectedNode !== null ? selectedNode : 'None'}
       </div>
     </div>
   );
-}
+};
 
 export default App;
