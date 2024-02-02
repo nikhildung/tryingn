@@ -1,6 +1,8 @@
 // App.js
 import React, { useState } from 'react';
 import { TreeView, TreeItem } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 const data = [
   {
@@ -35,7 +37,13 @@ const App = () => {
   };
 
   const renderTree = (nodes) => (
-    <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name}>
+    <TreeItem
+      key={nodes.id}
+      nodeId={nodes.id.toString()}
+      label={nodes.name}
+      onLabelClick={(e) => handleNodeSelect(e, nodes.id)}
+      icon={<div style={{ width: '24px', height: '24px' }} />}
+    >
       {Array.isArray(nodes.children)
         ? nodes.children.map((node) => renderTree(node))
         : null}
@@ -45,10 +53,9 @@ const App = () => {
   return (
     <div>
       <TreeView
-        defaultCollapseIcon={<span>-</span>}
-        defaultExpandIcon={<span>+</span>}
-        selected={selectedNode}
-        onNodeSelect={handleNodeSelect}
+        defaultCollapseIcon={<ExpandMoreIcon />}
+        defaultExpandIcon={<ChevronRightIcon />}
+        selected={selectedNode ? selectedNode.toString() : undefined}
       >
         {data.map((node) => renderTree(node))}
       </TreeView>
