@@ -1,30 +1,42 @@
-import React from 'react'
-import './TilesRendering.css'
+import React, { useState } from "react";
+import { TreeView } from "@mui/x-tree-view/TreeView";
+import { TreeItem } from "@mui/x-tree-view/TreeItem";
+import TilesRendering from "./TilesRendering"; // Replace with the actual path to your TilesRendering component
 
-import { Link } from 'react-router-dom'
+const Homepage = () => {
+  const [selectedNode, setSelectedNode] = useState(null);
 
+  const handleNodeSelect = (event, nodeId) => {
+    setSelectedNode(nodeId);
+  };
 
-const CardSection = ({ selectedNode }) => {
+  const renderTree = (nodes) => (
+    <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name}>
+      {Array.isArray(nodes.children)
+        ? nodes.children.map((node) => renderTree(node))
+        : null}
+    </TreeItem>
+  );
 
   return (
+    <div style={{ display: "flex" }}>
+      <TreeView
+        defaultCollapseIcon={<div>-</div>}
+        defaultExpandIcon={<span>+</span>}
+        selected={selectedNode}
+        onNodeSelect={handleNodeSelect}
+      >
+        {data.map((node) => renderTree(node))}
+      </TreeView>
 
-    <article className='product_card'>
-      <a href="" className='product_a'>
-      <div className="product_image">
-          {selectedNode.src && <img src={selectedNode.src} alt="" />}
-
+      <div style={{ marginLeft: "20px" }}>
+        {selectedNode && (
+          <TilesRendering selectedNode={selectedNode} />
+          {/* Replace TilesRendering with your actual TilesRendering component */}
+        )}
       </div>
+    </div>
+  );
+};
 
-      <div className="product_details">
-        <h3 className="product_title">{selectedNode.name}</h3>
-        <p className="product_desc">{selectedNode.Description}</p>
-
-      </div>
-
-      </a>
-    </article>
-  )
-}
-
-export default CardSection
-
+export default Homepage;
