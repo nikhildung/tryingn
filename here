@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TreeView } from "@mui/x-tree-view/TreeView";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import TilesRendering from "../ExploreAPI/TilesRendering"; // Replace with the actual path to your TilesRendering component
@@ -8,6 +8,17 @@ const Homepage = () => {
   const [selectedNode, setSelectedNode] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState(null);
+  const [expandedNodes, setExpandedNodes] = useState([]);
+
+  useEffect(() => {
+    // Automatically expand nodes based on the search term
+    if (searchTerm && filteredData && filteredData.length > 0) {
+      const pathToNode = findNodePath(data, searchTerm);
+      setExpandedNodes(pathToNode);
+    } else {
+      setExpandedNodes([]); // Collapse all nodes when there's no search term or no matching results
+    }
+  }, [searchTerm, filteredData]);
 
   const handleNodeSelect = (event, nodeId) => {
     const findNode = (nodes) => {
@@ -57,6 +68,25 @@ const Homepage = () => {
     });
   };
 
+  const findNodePath = (nodes, term, currentPath = []) => {
+    for (let node of nodes) {
+      const nodeName = node.name.toLowerCase();
+      if (nodeName.includes(term)) {
+        return [...currentPath, node.id];
+      }
+      if (node.children) {
+        const pathInChildren = findNodePath(node.children, term, [
+          ...currentPath,
+          node.id,
+        ]);
+        if (pathInChildren.length > currentPath.length) {
+          return pathInChildren;
+        }
+      }
+    }
+    return currentPath;
+  };
+
   const renderTree = (nodes) => (
     <TreeItem
       key={nodes.id}
@@ -64,6 +94,7 @@ const Homepage = () => {
       label={nodes.name}
       defaultCollapseIcon={<span>-</span>}
       defaultExpandIcon={<span>+</span>}
+      expanded={expandedNodes.includes(nodes.id)}
     >
       {Array.isArray(nodes.children)
         ? nodes.children.map((node) => renderTree(node))
@@ -101,6 +132,8 @@ const Homepage = () => {
             defaultCollapseIcon={<span>-</span>}
             defaultExpandIcon={<span>+</span>}
             onNodeSelect={handleNodeSelect}
+            expanded={expandedNodes}
+            onNodeToggle={(event, nodes) => setExpandedNodes(nodes)}
           >
             {filteredData
               ? filteredData.map((node) => renderTree(node))
