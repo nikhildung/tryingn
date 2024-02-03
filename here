@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { TreeView } from "@mui/x-tree-view/TreeView";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
@@ -65,10 +64,10 @@ const Homepage = () => {
     const filteredNodes = filterNodes(data, searchTerm);
     setFilteredData(filteredNodes);
 
-    // Automatically expand nodes based on the search term
+    // Preserve the expanded state during search
     if (searchTerm && filteredNodes && filteredNodes.length > 0) {
       const pathToNode = findNodePath(data, searchTerm);
-      setExpandedNodes(pathToNode);
+      setExpandedNodes((prevExpanded) => Array.from(new Set([...prevExpanded, ...pathToNode])));
     } else {
       setExpandedNodes(getAllNodeIds(data)); // Expand all nodes when there's no search term or no matching results
     }
