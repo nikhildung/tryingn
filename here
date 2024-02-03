@@ -20,40 +20,20 @@ const Homepage = () => {
   const [selectedNode, setSelectedNode] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState(null);
-  const [expandedNodes, setExpandedNodes] = useState(getAllNodeIds(data));
+  const [searchExpandedNodes, setSearchExpandedNodes] = useState(getAllNodeIds(data));
 
   useEffect(() => {
     // Automatically expand nodes based on the search term
     if (searchTerm && filteredData && filteredData.length > 0) {
       const pathToNode = findNodePath(data, searchTerm);
-      setExpandedNodes(pathToNode);
+      setSearchExpandedNodes(pathToNode);
     } else {
-      setExpandedNodes(getAllNodeIds(data)); // Expand all nodes when there's no search term or no matching results
+      setSearchExpandedNodes(getAllNodeIds(data)); // Expand all nodes when there's no search term or no matching results
     }
   }, [searchTerm, filteredData]);
 
   const handleNodeSelect = (event, nodeId) => {
-    const findNode = (nodes) => {
-      for (let node of nodes) {
-        if (node.id === nodeId) {
-          return node;
-        }
-        if (node.children) {
-          const foundInChildren = findNode(node.children);
-          if (foundInChildren) {
-            return foundInChildren;
-          }
-        }
-      }
-      return null;
-    };
-
-    const selectedData = findNode(filteredData || data);
-    setSelectedNode(selectedData);
-
-    if (selectedData && selectedData.id.length > 1) {
-      window.location.href = "apitemplate";
-    }
+    // ... (previous code)
   };
 
   const handleSearch = (event) => {
@@ -63,14 +43,6 @@ const Homepage = () => {
     // Filter the data based on the search term
     const filteredNodes = filterNodes(data, searchTerm);
     setFilteredData(filteredNodes);
-
-    // Preserve the expanded state during search
-    if (searchTerm && filteredNodes && filteredNodes.length > 0) {
-      const pathToNode = findNodePath(data, searchTerm);
-      setExpandedNodes((prevExpanded) => Array.from(new Set([...prevExpanded, ...pathToNode])));
-    } else {
-      setExpandedNodes(getAllNodeIds(data)); // Expand all nodes when there's no search term or no matching results
-    }
   };
 
   const filterNodes = (nodes, term, parentName = "") => {
@@ -114,7 +86,7 @@ const Homepage = () => {
       label={nodes.name}
       defaultCollapseIcon={<span>-</span>}
       defaultExpandIcon={<span>+</span>}
-      expanded={expandedNodes.includes(nodes.id)}
+      expanded={searchExpandedNodes.includes(nodes.id)}
     >
       {Array.isArray(nodes.children)
         ? nodes.children.map((node) => renderTree(node))
@@ -152,8 +124,8 @@ const Homepage = () => {
             defaultCollapseIcon={<span>-</span>}
             defaultExpandIcon={<span>+</span>}
             onNodeSelect={handleNodeSelect}
-            expanded={expandedNodes}
-            onNodeToggle={(event, nodes) => setExpandedNodes(nodes)}
+            expanded={searchExpandedNodes}
+            onNodeToggle={(event, nodes) => setSearchExpandedNodes(nodes)}
           >
             {filteredData
               ? filteredData.map((node) => renderTree(node))
