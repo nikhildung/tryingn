@@ -96,15 +96,17 @@ const Homepage = () => {
         />
       </div>
       <div style={{ display: "flex" }}>
-        <TreeView
-          defaultCollapseIcon={<span>-</span>}
-          defaultExpandIcon={<span>+</span>}
-          onNodeSelect={handleNodeSelect}
-        >
-          {filteredData
-            ? filteredData.map((node) => renderTree(node))
-            : data.map((node) => renderTree(node))}
-        </TreeView>
+        {filteredData && filteredData.length > 0 ? (
+          <TreeView
+            defaultCollapseIcon={<span>-</span>}
+            defaultExpandIcon={<span>+</span>}
+            onNodeSelect={handleNodeSelect}
+          >
+            {filteredData.map((node) => renderTree(node))}
+          </TreeView>
+        ) : (
+          <h1>No matching results</h1>
+        )}
 
         <div style={{ marginLeft: "20px" }}>
           {renderChildrenAsTiles(selectedNode)}
