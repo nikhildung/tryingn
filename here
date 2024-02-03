@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { TreeView } from "@mui/x-tree-view/TreeView";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import TilesRendering from "../ExploreAPI/TilesRendering"; // Replace with the actual path to your TilesRendering component
-import data from "../ExploreAPI/ExploreAPIPage.json"
-  
+import data from "../ExploreAPI/ExploreAPIPage.json";
+
 const Homepage = () => {
   const [selectedNode, setSelectedNode] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [filteredData, setFilteredData] = useState(null);
 
   const handleNodeSelect = (event, nodeId) => {
-    // Find the selected node from the data based on the nodeId
     const findNode = (nodes) => {
       for (let node of nodes) {
         if (node.id === nodeId) {
@@ -25,15 +25,14 @@ const Homepage = () => {
       return null;
     };
 
-    const selectedData = findNode(data);
+    const selectedData = findNode(filteredData || data);
     setSelectedNode(selectedData);
 
-
-    if (selectedData.id.length>1) {
-        window.location.href = "apitemplate";
-      }
-    // Add your custom logic here for redirecting or any other actions
+    if (selectedData && selectedData.id.length > 1) {
+      window.location.href = "apitemplate";
+    }
   };
+
   const handleSearch = (event) => {
     const searchTerm = event.target.value.toLowerCase();
     setSearchTerm(searchTerm);
@@ -44,6 +43,18 @@ const Homepage = () => {
   };
 
   const filterNodes = (nodes, term, parentName = "") => {
+    return nodes.filter((node) => {
+      const nodeName = node.name.toLowerCase();
+      const nodeMatches = nodeName.includes(term);
+      const children = filterNodes(node.children || [], term, nodeName);
+
+      if (nodeMatches || children.length > 0) {
+        node.children = children;
+        return true;
+      }
+
+      return false;
+    });
   };
 
   const renderTree = (nodes) => (
@@ -51,8 +62,8 @@ const Homepage = () => {
       key={nodes.id}
       nodeId={nodes.id}
       label={nodes.name}
-      defaultcollapseicon={<span>-</span>}
-        defaultexpandicon={<span>+</span>}
+      defaultCollapseIcon={<span>-</span>}
+      defaultExpandIcon={<span>+</span>}
     >
       {Array.isArray(nodes.children)
         ? nodes.children.map((node) => renderTree(node))
@@ -73,31 +84,34 @@ const Homepage = () => {
     return null;
   };
 
-  return <>
-<div>
-
-    <h2>Categories</h2>
-      <input
-        type="text"
-        placeholder="Search..."
-        value={searchTerm}
-        onChange={handleSearch}
-      />
-</div>
-      <div style={{ display: "flex" }}>
-      <TreeView
-        defaultCollapseIcon={<span>-</span>}
-        defaultExpandIcon={<span>+</span>}
-        onNodeSelect={handleNodeSelect}
-      >
-        {data.map((node) => renderTree(node))}
-      </TreeView>
-
-      <div style={{ marginLeft: "20px" }}>
-        {renderChildrenAsTiles(selectedNode)}
+  return (
+    <>
+      <div>
+        <h2>Categories</h2>
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={handleSearch}
+        />
       </div>
-    </div>
+      <div style={{ display: "flex" }}>
+        <TreeView
+          defaultCollapseIcon={<span>-</span>}
+          defaultExpandIcon={<span>+</span>}
+          onNodeSelect={handleNodeSelect}
+        >
+          {filteredData
+            ? filteredData.map((node) => renderTree(node))
+            : data.map((node) => renderTree(node))}
+        </TreeView>
+
+        <div style={{ marginLeft: "20px" }}>
+          {renderChildrenAsTiles(selectedNode)}
+        </div>
+      </div>
     </>
+  );
 };
 
 export default Homepage;
