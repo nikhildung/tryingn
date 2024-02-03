@@ -53,10 +53,10 @@ const Homepage = () => {
       return null;
     };
 
-    const selectedData = findNode(data);
+    const selectedData = findNode(filteredData);
     setSelectedNode(selectedData);
 
-    if (selectedData.id.length > 1) {
+    if (selectedData && selectedData.id.length > 1) {
       window.location.href = "apitemplate";
     }
     // Add your custom logic here for redirecting or any other actions
