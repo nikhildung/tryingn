@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { TreeView } from "@mui/x-tree-view/TreeView";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
@@ -18,6 +19,19 @@ const Homepage = () => {
     </TreeItem>
   );
 
+  const renderChildrenAsTiles = (selectedNode) => {
+    if (selectedNode && selectedNode.children) {
+      return (
+        <div>
+          {selectedNode.children.map((child) => (
+            <TilesRendering key={child.id} selectedNode={child} />
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div style={{ display: "flex" }}>
       <TreeView
@@ -30,13 +44,11 @@ const Homepage = () => {
       </TreeView>
 
       <div style={{ marginLeft: "20px" }}>
-        {selectedNode && (
-          <TilesRendering selectedNode={selectedNode} />
-          {/* Replace TilesRendering with your actual TilesRendering component */}
-        )}
+        {renderChildrenAsTiles(selectedNode)}
       </div>
     </div>
   );
 };
 
 export default Homepage;
+p pm
