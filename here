@@ -96,13 +96,15 @@ const Homepage = () => {
         />
       </div>
       <div style={{ display: "flex" }}>
-        {filteredData && filteredData.length > 0 ? (
+        {(filteredData && filteredData.length > 0) || !searchTerm ? (
           <TreeView
             defaultCollapseIcon={<span>-</span>}
             defaultExpandIcon={<span>+</span>}
             onNodeSelect={handleNodeSelect}
           >
-            {filteredData.map((node) => renderTree(node))}
+            {filteredData
+              ? filteredData.map((node) => renderTree(node))
+              : data.map((node) => renderTree(node))}
           </TreeView>
         ) : (
           <h1>No matching results</h1>
