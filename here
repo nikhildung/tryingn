@@ -1,14 +1,27 @@
+
 import React, { useState, useEffect } from "react";
 import { TreeView } from "@mui/x-tree-view/TreeView";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import TilesRendering from "../ExploreAPI/TilesRendering"; // Replace with the actual path to your TilesRendering component
 import data from "../ExploreAPI/ExploreAPIPage.json";
 
+// Function to get all node IDs from the tree data
+const getAllNodeIds = (nodes) => {
+  let ids = [];
+  for (let node of nodes) {
+    ids.push(node.id);
+    if (node.children) {
+      ids = [...ids, ...getAllNodeIds(node.children)];
+    }
+  }
+  return ids;
+};
+
 const Homepage = () => {
   const [selectedNode, setSelectedNode] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState(null);
-  const [expandedNodes, setExpandedNodes] = useState([]);
+  const [expandedNodes, setExpandedNodes] = useState(getAllNodeIds(data));
 
   useEffect(() => {
     // Automatically expand nodes based on the search term
@@ -16,7 +29,7 @@ const Homepage = () => {
       const pathToNode = findNodePath(data, searchTerm);
       setExpandedNodes(pathToNode);
     } else {
-      setExpandedNodes([]); // Collapse all nodes when there's no search term or no matching results
+      setExpandedNodes(getAllNodeIds(data)); // Expand all nodes when there's no search term or no matching results
     }
   }, [searchTerm, filteredData]);
 
@@ -57,7 +70,7 @@ const Homepage = () => {
       const pathToNode = findNodePath(data, searchTerm);
       setExpandedNodes(pathToNode);
     } else {
-      setExpandedNodes([]); // Collapse all nodes when there's no search term or no matching results
+      setExpandedNodes(getAllNodeIds(data)); // Expand all nodes when there's no search term or no matching results
     }
   };
 
