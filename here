@@ -51,6 +51,14 @@ const Homepage = () => {
     // Filter the data based on the search term
     const filteredNodes = filterNodes(data, searchTerm);
     setFilteredData(filteredNodes);
+
+    // Automatically expand nodes based on the search term
+    if (searchTerm && filteredNodes && filteredNodes.length > 0) {
+      const pathToNode = findNodePath(data, searchTerm);
+      setExpandedNodes(pathToNode);
+    } else {
+      setExpandedNodes([]); // Collapse all nodes when there's no search term or no matching results
+    }
   };
 
   const filterNodes = (nodes, term, parentName = "") => {
@@ -151,4 +159,4 @@ const Homepage = () => {
   );
 };
 
-export defau
+export default Homepage;
