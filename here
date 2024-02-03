@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { TreeView } from "@mui/x-tree-view/TreeView";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import TilesRendering from "../ExploreAPI/TilesRendering"; // Replace with the actual path to your TilesRendering component
@@ -9,32 +9,7 @@ const data = [
 
 const Homepage = () => {
   const [selectedNode, setSelectedNode] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredData, setFilteredData] = useState(data);
-
-  useEffect(() => {
-    const filterTree = (nodes, term) => {
-      return nodes.map((node) => {
-        const filteredNode = {
-          ...node,
-          children: node.children ? filterTree(node.children, term) : null,
-        };
-
-        if (term && !filteredNode.label.toLowerCase().includes(term.toLowerCase())) {
-          // If search term is provided and node doesn't match, check its children
-          if (filteredNode.children) {
-            const filteredChildren = filterTree(filteredNode.children, term);
-            filteredNode.children = filteredChildren.length > 0 ? filteredChildren : null;
-          }
-        }
-
-        return filteredNode;
-      });
-    };
-
-    const filteredTree = filterTree(data, searchTerm);
-    setFilteredData(filteredTree);
-  }, [searchTerm, data]);
+  const [filterText, setFilterText] = useState(""); // State to hold filter text
 
   const handleNodeSelect = (event, nodeId) => {
     // Find the selected node from the data based on the nodeId
@@ -53,7 +28,7 @@ const Homepage = () => {
       return null;
     };
 
-    const selectedData = findNode(filteredData);
+    const selectedData = findNode(data);
     setSelectedNode(selectedData);
 
     if (selectedData && selectedData.id.length > 1) {
@@ -89,13 +64,19 @@ const Homepage = () => {
     return null;
   };
 
+  // Filter the tree based on the entered text
+  const filteredData = data.filter((node) =>
+    node.name.toLowerCase().includes(filterText.toLowerCase())
+  );
+
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
       <input
         type="text"
         placeholder="Search..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        value={filterText}
+        onChange={(e) => setFilterText(e.target.value)}
+        style={{ marginBottom: "10px" }}
       />
       <TreeView
         defaultCollapseIcon={<span>-</span>}
