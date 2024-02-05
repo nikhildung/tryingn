@@ -8,30 +8,21 @@ const App = () => {
         prevNode.ID === e.itemData.ID ? { ...prevNode, expanded: !prevNode.expanded } : e.itemData
       );
     } else if (e.itemData.categoryId.length === 1) {
-      // Redirect to "apitemplate" when a category node is clicked
-      window.location.href = "apitemplate";
+      // Update selectedNode to the clicked parent category
+      setSelectedNode(e.itemData);
     }
   };
 
-  const renderProductDetails = (node) => {
-    if (node.ID.length === 1) {
-      return (
-        <div id="product-details">
-          <div className="name">{node.name}</div>
-        </div>
-      );
-    } else {
-      // Render child products when the node is expanded
-      return node.expanded && (
-        <div id="product-details">
-          {products
-            .filter((product) => product.categoryId === node.ID)
-            .map((child) => (
-              <div key={child.ID} className="name">{child.name}</div>
-            ))}
-        </div>
-      );
-    }
+  const renderProductDetails = () => {
+    return (
+      <div id="product-details">
+        {products
+          .filter((product) => product.categoryId === selectedNode.ID)
+          .map((child) => (
+            <TilesRendering key={child.ID} selectedNode={child} />
+          ))}
+      </div>
+    );
   };
 
   return (
@@ -50,7 +41,7 @@ const App = () => {
         onItemSelectionChanged={selectProduct}
       />
 
-      {renderProductDetails(selectedNode)}
+      {renderProductDetails()}
     </div>
   );
 };
