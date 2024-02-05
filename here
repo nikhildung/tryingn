@@ -1,146 +1,125 @@
-import React, { useState, useEffect } from "react";
-import { TreeView } from "@mui/x-tree-view/TreeView";
-import { TreeItem } from "@mui/x-tree-view/TreeItem";
-import TilesRendering from "../ExploreAPI/TilesRendering"; // Replace with the actual path to your TilesRendering component
-import data from "../ExploreAPI/ExploreAPIPage.json";
-
-// Function to get all node IDs from the tree data
-const getAllNodeIds = (nodes) => {
-  let ids = [];
-  for (let node of nodes) {
-    ids.push(node.id);
-    if (node.children) {
-      ids = [...ids, ...getAllNodeIds(node.children)];
-    }
+[
+  {
+    "id": "1",
+    "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+    "name": "Payments",
+    "Description": "This is Payments API",
+    "children": [
+      {
+        "id": "11",
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "CMS Payments",
+        "Description": "This is CMS Payments API",
+        "children": []
+      },
+      {
+        "id": "111",
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "CMSSS Payments",
+        "Description": "This is CMS Payments API",
+        "children": []
+      },
+      {
+        "id": "12",
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "24*7 Payments",
+        "Description": "This is 24*7 Payments API",
+        "children": []
+      },
+      {
+        "id": "13",
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "Remittance",
+        "Description": "This is Remittance Payments API",
+        "children": []
+      },
+      {
+        "id": "14",
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "UPI Pay",
+        "Description": "This is UPI Payments API",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+    "name": "Account Services",
+    "Description": "This is Account Services API",
+    "children": [
+      {
+        "id": "21",
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "Balance",
+        "Description": "This is Account Balance API",
+        "children": []
+      },
+      {
+        "id": "22",
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "Statement",
+        "Description": "This is Account Statements API",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+    "name": "Collections",
+    "Description": "This is Collection API",
+    "children": [
+      {
+        "id": "31",
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "NACH",
+        "Description": "This is NACH API",
+        "children": []
+      },
+      {
+        "id": "32",
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "E-collect",
+        "Description": "This is E-collect API",
+        "children": []
+      },
+      {
+        "id": "33",
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "BBPS",
+        "Description": "This is BBPS API",
+        "children": []
+      },
+      {
+        "id": "34",
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "UPI Collect",
+        "Description": "This is UPI Collect API",
+        "children": []
+      },
+      {
+        "id": "35",
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "recurring",
+        "Description": "This is UPI recurring API",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+    "name": "Acquiring",
+    "Description": "This is Acquiring API",
+    "children": [
+      {
+        "id": "41",
+        "src": "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg",
+        "name": "Acquiring",
+        "Description": "This is Acquiring API",
+        "children": []
+      }
+    ]
   }
-  return ids;
-};
-
-const Homepage = () => {
-  const [selectedNode, setSelectedNode] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredData, setFilteredData] = useState(null);
-  const [searchExpandedNodes, setSearchExpandedNodes] = useState(getAllNodeIds(data));
-
-  useEffect(() => {
-    // Automatically expand nodes based on the search term
-    if (searchTerm && filteredData && filteredData.length > 0) {
-      const pathToNode = findNodePath(data, searchTerm);
-      setSearchExpandedNodes(pathToNode);
-    } else {
-      setSearchExpandedNodes(getAllNodeIds(data)); // Expand all nodes when there's no search term or no matching results
-    }
-  }, [searchTerm, filteredData]);
-
-  const handleNodeSelect = (event, nodeId) => {
-    // ... (previous code)
-  };
-
-  const handleSearch = (event) => {
-    const searchTerm = event.target.value.toLowerCase();
-    setSearchTerm(searchTerm);
-
-    // Filter the data based on the search term
-    const filteredNodes = filterNodes(data, searchTerm);
-    setFilteredData(filteredNodes);
-  };
-
-  const filterNodes = (nodes, term, parentName = "") => {
-    return nodes.filter((node) => {
-      const nodeName = node.name.toLowerCase();
-      const nodeMatches = nodeName.includes(term);
-      const children = filterNodes(node.children || [], term, nodeName);
-
-      if (nodeMatches || children.length > 0) {
-        node.children = children;
-        return true;
-      }
-
-      return false;
-    });
-  };
-
-  const findNodePath = (nodes, term, currentPath = []) => {
-    for (let node of nodes) {
-      const nodeName = node.name.toLowerCase();
-      if (nodeName.includes(term)) {
-        return [...currentPath, node.id];
-      }
-      if (node.children) {
-        const pathInChildren = findNodePath(node.children, term, [
-          ...currentPath,
-          node.id,
-        ]);
-        if (pathInChildren.length > currentPath.length) {
-          return pathInChildren;
-        }
-      }
-    }
-    return currentPath;
-  };
-
-  const renderTree = (nodes) => (
-    <TreeItem
-      key={nodes.id}
-      nodeId={nodes.id}
-      label={nodes.name}
-      defaultCollapseIcon={<span>-</span>}
-      defaultExpandIcon={<span>+</span>}
-      expanded={searchExpandedNodes.includes(nodes.id)}
-    >
-      {Array.isArray(nodes.children)
-        ? nodes.children.map((node) => renderTree(node))
-        : null}
-    </TreeItem>
-  );
-
-  const renderChildrenAsTiles = (selectedNode) => {
-    if (selectedNode && selectedNode.children) {
-      return (
-        <div>
-          {selectedNode.children.map((child) => (
-            <TilesRendering key={child.id} selectedNode={child} />
-          ))}
-        </div>
-      );
-    }
-    return null;
-  };
-
-  return (
-    <>
-      <div>
-        <h2>Categories</h2>
-        <input
-          type="text"
-          placeholder="Search..."
-          value={searchTerm}
-          onChange={handleSearch}
-        />
-      </div>
-      <div style={{ display: "flex" }}>
-        {(filteredData && filteredData.length > 0) || !searchTerm ? (
-          <TreeView
-            defaultCollapseIcon={<span>-</span>}
-            defaultExpandIcon={<span>+</span>}
-            onNodeSelect={handleNodeSelect}
-            expanded={searchExpandedNodes}
-            onNodeToggle={(event, nodes) => setSearchExpandedNodes(nodes)}
-          >
-            {filteredData
-              ? filteredData.map((node) => renderTree(node))
-              : data.map((node) => renderTree(node))}
-          </TreeView>
-        ) : (
-          <h1>No matching results</h1>
-        )}
-
-        <div style={{ marginLeft: "20px" }}>
-          {renderChildrenAsTiles(selectedNode)}
-        </div>
-      </div>
-    </>
-  );
-};
-
-export default Homepage;
+]
