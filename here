@@ -1,32 +1,38 @@
-import React, { useState } from 'react';
-import 'devextreme/dist/css/dx.light.css';
-import './TreeView.css'
-
-import TreeView from 'devextreme-react/tree-view';
-import products from './Products';
-import TilesRendering from "./TilesRendering"
-
-
-
-
-function App() {
+const App = () => {
   const [selectedNode, setSelectedNode] = useState(products[0]);
 
   const selectProduct = (e) => {
-
-    if(e.itemData.ID.length==1){
-      console.log(e.itemData)
-      setSelectedNode(e.itemData)
+    if (e.itemData.ID.length === 1) {
+      // Toggle the expansion of the selected node
+      setSelectedNode((prevNode) => 
+        prevNode.ID === e.itemData.ID ? { ...prevNode, expanded: !prevNode.expanded } : e.itemData
+      );
+    } else if (e.itemData.categoryId.length === 1) {
+      // Redirect to "apitemplate" when a category node is clicked
+      window.location.href = "apitemplate";
     }
-    
-    else if(e.itemData.categoryId.length==1){
-      window.location.href = "apitemplate"
-setSelectedNode(e.itemData)
+  };
 
+  const renderProductDetails = (node) => {
+    if (node.ID.length === 1) {
+      return (
+        <div id="product-details">
+          <div className="name">{node.name}</div>
+        </div>
+      );
+    } else {
+      // Render child products when the node is expanded
+      return node.expanded && (
+        <div id="product-details">
+          {products
+            .filter((product) => product.categoryId === node.ID)
+            .map((child) => (
+              <div key={child.ID} className="name">{child.name}</div>
+            ))}
+        </div>
+      );
     }
-
-
-  }
+  };
 
   return (
     <div>
@@ -44,48 +50,9 @@ setSelectedNode(e.itemData)
         onItemSelectionChanged={selectProduct}
       />
 
-      {
-        selectedNode.ID.length ==1  &&
-
-        <div id="product-details">
-
-          <div className="name">{selectedNode.name}</div>
-
-        </div>
-      }
+      {renderProductDetails(selectedNode)}
     </div>
   );
-}
+};
 
 export default App;
-
-
-const IMAGE_URL = "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg";
- 
-const products = [
-    {
-        ID: "1",
-        name: "Payments",
-        categoryId: null
-    },
-    {
-        ID:"1_1",
-        categoryId: "1",
-        name: "24*7 Payments",
-        image: IMAGE_URL,
-    },
-
-    {
-        ID:"2",
-        name: "Collections", 
-        categoryId: null
-    },
-    {
-        ID:"2_1",
-        categoryId: "2",
-        name: "Nach"
-    },
-    
-];
- 
-export default products;
