@@ -1,35 +1,140 @@
 import React from "react";
 import Treeview from "./TreeView";
-import jsondata from "../ExploreAPI/ExploreAPIPage.json"
+import jsondata from "../ExploreAPI/ExploreAPIPage.json";
 import TilesRendering from "./TilesRendering";
-
+import "./ExploreAPIPage.css";
 
 const ExploreAPIPage = () => {
-  const Categories = jsondata.filter((node)=>{
-    return node.id.length == 1
-  })
-  {Categories.map((parent)=>{
-    console.log(parent)
-  })}
-
+  const Categories = jsondata.filter((node) => {
+    return node.id.length == 1;
+  });
 
   return (
     <div>
-      <section className="API_page">
-
+      <section className="gridlayout">
         <Treeview />
 
-
-      </section>
-      <section className="featured_products_list">
-
-      {Categories.map((parent)=>{
-          <TilesRendering key={parent.id} selectedNode={parent}/>
-        })}
-
+        <ul className="featured_products_list">
+          {Categories.map((child) => (
+            <TilesRendering key={child.id} selectedNode={child} />
+          ))}
+        </ul>
       </section>
     </div>
   );
 };
 
 export default ExploreAPIPage;
+
+
+import React, { useState, useEffect } from "react";
+import "./Sidebarsection.css";
+import jsonData from "./ExploreAPIPage.json";
+import TilesRendering from "./TilesRendering";
+
+const TreeView = () => {
+  // the below states are used for the input field, filtering the tree based on the input field and selectnode basically tells which node is selected
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredData, setFilteredData] = useState(jsonData);
+  const [selectedNode, setSelectedNode] = useState(null);
+
+  const TreeNode = ({ node, onNodeClick }) => {
+    const [isOpen, setIsOpen] = useState(true);
+
+    const handleNodeClick = () => {
+      setIsOpen(!isOpen);
+      onNodeClick(node);
+    };
+
+    const isNodeExpanded = isOpen || node.children;
+
+    return (
+      <li className="Trying">
+        <span onClick={handleNodeClick}>
+          <a>{node.name}</a>
+        </span>
+
+        {isNodeExpanded && node.children.length > 0 && (
+          <ul>
+            {node.children.map((child) => (
+              <TreeNode key={child.id} node={child} onNodeClick={onNodeClick} />
+            ))}
+          </ul>
+        )}
+      </li>
+    );
+  };
+
+  const handleNodeClick = (node) => {
+    setSelectedNode(node);
+    if (node.id.length > 1) {
+      window.location.href = "apitemplate";
+    }
+  };
+
+  const handleSearch = (event) => {
+    const searchTerm = event.target.value.toLowerCase();
+    setSearchTerm(searchTerm);
+
+    // Filter the data based on the search term
+    const filteredNodes = filterNodes(jsonData, searchTerm);
+    setFilteredData(filteredNodes);
+  };
+
+  const filterNodes = (nodes, term, parentName = "") => {
+    return nodes.reduce((filtered, node) => {
+      const nodeMatches = node.name.toLowerCase().includes(term);
+      const childMatches =
+        node.children && filterNodes(node.children, term, node.name).length > 0;
+
+      if (nodeMatches || childMatches) {
+        // Include only the current node if it matches the search term or its children match
+        filtered.push({
+          ...node,
+          children: filterNodes(node.children, term, node.name),
+        });
+      } else if (parentName.toLowerCase().includes(term)) {
+        // Include the parent node if it matches the search term, even if its children don't match
+        filtered.push({
+          ...node,
+          children: filterNodes(node.children, term, node.name),
+        });
+      }
+
+      return filtered;
+    }, []);
+  };
+
+  return (
+    <>
+      <aside className="API_aside">
+        <h2>Categories</h2>
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+        <ul className="Trying">
+          {filteredData.map((parent) => (
+            <TreeNode
+              key={parent.id}
+              node={parent}
+              onNodeClick={handleNodeClick}
+            />
+          ))}
+        </ul>
+      </aside>
+
+      {selectedNode && selectedNode.children && (
+        <ul className="featured_products_list">
+          {selectedNode.children.map((child) => (
+            <TilesRendering key={child.id} selectedNode={child} />
+          ))}
+        </ul>
+      )}
+    </>
+  );
+};
+
+export default TreeView;
