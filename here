@@ -1,42 +1,91 @@
-import React, { useState } from "react";
-import TreeView from "./TreeView";
-import jsondata from "../ExploreAPI/ExploreAPIPage.json";
-import TilesRendering from "./TilesRendering";
-import "./ExploreAPIPage.css";
+import React, { useState } from 'react';
+import 'devextreme/dist/css/dx.light.css';
+import './TreeView.css'
 
-const ExploreAPIPage = () => {
-  const [showFirstFeatureList, setShowFirstFeatureList] = useState(true);
-  const Categories = jsondata.filter((node) => {
-    return node.id.length === 1;
-  });
+import TreeView from 'devextreme-react/tree-view';
+import products from './Products';
+import TilesRendering from "./TilesRendering"
 
-  const handleNodeClick = () => {
-    // When a parent in the tree is clicked, hide the first feature list
-    setShowFirstFeatureList(false);
-  };
+
+
+
+function App() {
+  const [selectedNode, setSelectedNode] = useState(products[0]);
+
+  const selectProduct = (e) => {
+
+    if(e.itemData.ID.length==1){
+      console.log(e.itemData)
+      setSelectedNode(e.itemData)
+    }
+    
+    else if(e.itemData.categoryId.length==1){
+      window.location.href = "apitemplate"
+setSelectedNode(e.itemData)
+
+    }
+
+
+  }
 
   return (
     <div>
-      <section className="gridlayout">
-        <TreeView onNodeClick={handleNodeClick} />
+      <TreeView 
+        id="treeView"
+        dataSource={products}
+        dataStructure="plain"
+        keyExpr="ID"
+        displayExpr="name"
+        parentIdExpr="categoryId"
+        searchEnabled={true}
+        searchMode="startswith"
+        selectionMode="single"
+        selectByClick={true}
+        onItemSelectionChanged={selectProduct}
+      />
 
-        {showFirstFeatureList && (
-          <ul className="featured_products_list">
-            {Categories.map((child) => (
-              <TilesRendering key={child.id} selectedNode={child} />
-            ))}
-          </ul>
-        )}
+      {
+        selectedNode.ID.length ==1  &&
 
-        {!showFirstFeatureList && (
-          {/* Render the second feature list or any other content */}
-          <ul className="featured_products_list">
-            {/* Render based on the clicked parent in the tree */}
-          </ul>
-        )}
-      </section>
+        <div id="product-details">
+
+          <div className="name">{selectedNode.name}</div>
+
+        </div>
+      }
     </div>
   );
-};
+}
 
-export default ExploreAPIPage;
+export default App;
+
+
+const IMAGE_URL = "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg";
+ 
+const products = [
+    {
+        ID: "1",
+        name: "Payments",
+        categoryId: null
+    },
+    {
+        ID:"1_1",
+        categoryId: "1",
+        name: "24*7 Payments",
+        image: IMAGE_URL,
+    },
+
+    {
+        ID:"2",
+        name: "Collections", 
+        categoryId: null
+    },
+    {
+        ID:"2_1",
+        categoryId: "2",
+        name: "Nach"
+    },
+    
+];
+ 
+export default products;
