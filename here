@@ -49,8 +49,6 @@ const App = () => {
 
   </aside>
 <div className="featured_products_list">
-{console.log(selectedNode)}
-
 
         {products
           .filter((product) => product.categoryId === selectedNode.ID)
