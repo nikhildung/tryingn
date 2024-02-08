@@ -1,67 +1,57 @@
 import React, { useState } from "react";
-import "devextreme/dist/css/dx.light.css";
-import "./TreeView.css";
-import "./ExploreAPIPage.css";
-import TreeView from "devextreme-react/tree-view";
-import products from "./Products";
-import TilesRendering from "./TilesRendering";
+import jsonData from "./data.json"; // Assuming your JSON data is stored in data.json
 
 const App = () => {
-  const Categories = products.filter((node) => {
-    return node.categoryId === null;
-  });
-  const [selectedNode, setSelectedNode] = useState("");
+  const [selectedNode, setSelectedNode] = useState(null);
 
-  const selectProduct = (e) => {
-    if (e.itemData.categoryId === null) {
-      // Update selectedNode to the clicked parent category
-      setSelectedNode(e.itemData);
-    } else if (e.itemData.categoryId.length === 1) {
-      // Handle navigation or any other action for clicking a parent category
-      window.location.href = "apitemplate";
-    }
+  const handleCardClick = (node) => {
+    setSelectedNode(node);
+  };
+
+  const renderCards = (nodes) => {
+    return nodes.map((node) => (
+      <div key={node.id} onClick={() => handleCardClick(node)}>
+        <h3>{node.name}</h3>
+        {node.children && node.children.length > 0 && (
+          <div>
+            <p>Children:</p>
+            {renderCards(node.children)}
+          </div>
+        )}
+      </div>
+    ));
   };
 
   return (
-    <>
-      <aside className="API_aside">
-        <TreeView
-          id="treeView"
-          dataSource={Categories}
-          dataStructure="plain"
-          keyExpr="ID"
-          displayExpr="name"
-          parentIdExpr="categoryId"
-          searchEnabled={true}
-          searchMode="contains"
-          selectionMode="single"
-          selectByClick={true}
-          onItemSelectionChanged={selectProduct}
-        />
-      </aside>
-      <div className="featured_products_list">
-        {selectedNode && (
-          <TreeView
-            id="childTreeView"
-            dataSource={products.filter(
-              (product) => product.categoryId === selectedNode.ID
+    <div>
+      <h1>Parent and Child Cards</h1>
+      <div className="cards-container">
+        {jsonData.map((node) => (
+          <div key={node.id} onClick={() => handleCardClick(node)}>
+            <h3>{node.name}</h3>
+            {node.children && node.children.length > 0 && (
+              <div>
+                <p>Children:</p>
+                {renderCards(node.children)}
+              </div>
             )}
-            dataStructure="plain"
-            keyExpr="ID"
-            displayExpr="name"
-            parentIdExpr="categoryId"
-            searchEnabled={true}
-            searchMode="contains"
-            selectionMode="single"
-            selectByClick={true}
-            onItemSelectionChanged={selectProduct}
-          />
-        )}
-        {!selectedNode && (
-          <TilesRendering categories={Categories} />
-        )}
+          </div>
+        ))}
       </div>
-    </>
+      {selectedNode && (
+        <div>
+          <h2>Selected Node: {selectedNode.name}</h2>
+          {selectedNode.children && selectedNode.children.length > 0 && (
+            <div>
+              <h3>Children:</h3>
+              <div className="cards-container">
+                {renderCards(selectedNode.children)}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
   );
 };
 
