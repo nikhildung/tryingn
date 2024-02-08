@@ -1,33 +1,36 @@
+import React, { useState } from "react";
+import "devextreme/dist/css/dx.light.css";
+import "./TreeView.css";
+import "./ExploreAPIPage.css";
+import TreeView from "devextreme-react/tree-view";
+import products from "./Products";
+import TilesRendering from "./TilesRendering";
+
 const App = () => {
-  const [selectedNode, setSelectedNode] = useState(products[0]);
+  const [selectedNode, setSelectedNode] = useState(products[2]);
 
   const selectProduct = (e) => {
-    if (e.itemData.ID.length === 1) {
+    if (e.itemData.categoryId === null) {
       // Toggle the expansion of the selected node
-      setSelectedNode((prevNode) => 
-        prevNode.ID === e.itemData.ID ? { ...prevNode, expanded: !prevNode.expanded } : e.itemData
+      setSelectedNode((prevNode) =>
+        prevNode.ID === e.itemData.ID
+          ? { ...prevNode, expanded: !prevNode.expanded }
+          : e.itemData
       );
     } else if (e.itemData.categoryId.length === 1) {
       // Update selectedNode to the clicked parent category
+      window.location.href = "apitemplate";
       setSelectedNode(e.itemData);
     }
   };
 
-  const renderProductDetails = () => {
-    return (
-      <div id="product-details">
-        {products
-          .filter((product) => product.categoryId === selectedNode.ID)
-          .map((child) => (
-            <TilesRendering key={child.ID} selectedNode={child} />
-          ))}
-      </div>
-    );
-  };
 
   return (
-    <div>
-      <TreeView 
+
+<>
+    <aside className="API_aside">
+
+      <TreeView
         id="treeView"
         dataSource={products}
         dataStructure="plain"
@@ -35,14 +38,27 @@ const App = () => {
         displayExpr="name"
         parentIdExpr="categoryId"
         searchEnabled={true}
-        searchMode="startswith"
+        searchMode="contains"
         selectionMode="single"
         selectByClick={true}
         onItemSelectionChanged={selectProduct}
-      />
+        />
 
-      {renderProductDetails()}
-    </div>
+      {/* {renderProductDetails()}
+       */}
+
+  </aside>
+<div className="featured_products_list">
+{console.log(selectedNode)}
+
+
+        {products
+          .filter((product) => product.categoryId === selectedNode.ID)
+          .map((child) => (
+            <TilesRendering key={child.ID} selectedNode={child} />
+            ))}
+      </div>
+    </>
   );
 };
 
