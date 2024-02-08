@@ -12,53 +12,54 @@ const App = () => {
   });
   const [selectedNode, setSelectedNode] = useState("");
 
-  
   const selectProduct = (e) => {
     if (e.itemData.categoryId === null) {
-      // Toggle the expansion of the selected node
-      setSelectedNode((prevNode) =>
-        prevNode.ID === e.itemData.ID
-          ? { ...prevNode, expanded: !prevNode.expanded }
-          : e.itemData
-      );
-    } else if (e.itemData.categoryId.length === 1) {
       // Update selectedNode to the clicked parent category
-      window.location.href = "apitemplate";
       setSelectedNode(e.itemData);
+    } else if (e.itemData.categoryId.length === 1) {
+      // Handle navigation or any other action for clicking a parent category
+      window.location.href = "apitemplate";
     }
   };
 
-
   return (
-
-<>
-    <aside className="API_aside">
-
-      <TreeView
-        id="treeView"
-        dataSource={products}
-        dataStructure="plain"
-        keyExpr="ID"
-        displayExpr="name"
-        parentIdExpr="categoryId"
-        searchEnabled={true}
-        searchMode="contains"
-        selectionMode="single"
-        selectByClick={true}
-        onItemSelectionChanged={selectProduct}
+    <>
+      <aside className="API_aside">
+        <TreeView
+          id="treeView"
+          dataSource={Categories}
+          dataStructure="plain"
+          keyExpr="ID"
+          displayExpr="name"
+          parentIdExpr="categoryId"
+          searchEnabled={true}
+          searchMode="contains"
+          selectionMode="single"
+          selectByClick={true}
+          onItemSelectionChanged={selectProduct}
         />
-
-      {/* {renderProductDetails()}
-       */}
-
-  </aside>
-<div className="featured_products_list">
-
-        {products
-          .filter((product) => product.categoryId === selectedNode.ID)
-          .map((child) => (
-            <TilesRendering key={child.ID} selectedNode={child} />
-            ))}
+      </aside>
+      <div className="featured_products_list">
+        {selectedNode && (
+          <TreeView
+            id="childTreeView"
+            dataSource={products.filter(
+              (product) => product.categoryId === selectedNode.ID
+            )}
+            dataStructure="plain"
+            keyExpr="ID"
+            displayExpr="name"
+            parentIdExpr="categoryId"
+            searchEnabled={true}
+            searchMode="contains"
+            selectionMode="single"
+            selectByClick={true}
+            onItemSelectionChanged={selectProduct}
+          />
+        )}
+        {!selectedNode && (
+          <TilesRendering categories={Categories} />
+        )}
       </div>
     </>
   );
