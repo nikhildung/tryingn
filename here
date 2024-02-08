@@ -7,8 +7,12 @@ import products from "./Products";
 import TilesRendering from "./TilesRendering";
 
 const App = () => {
-  const [selectedNode, setSelectedNode] = useState(products[2]);
+  const Categories = products.filter((node) => {
+    return node.categoryId === null;
+  });
+  const [selectedNode, setSelectedNode] = useState("");
 
+  
   const selectProduct = (e) => {
     if (e.itemData.categoryId === null) {
       // Toggle the expansion of the selected node
