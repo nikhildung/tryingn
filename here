@@ -5,6 +5,7 @@ import jsondata from './ApipageTemplate.json'
 import SwaggerUI from 'swagger-ui-react';
 import Swagger from './Swagger'
 
+import products from './Products';
 const ApiPageTemplate = () => {
   const [content, setContent] = useState('');
   const [apiurl, setapiurl] = useState()
@@ -22,9 +23,20 @@ const ApiPageTemplate = () => {
     alert("If your subscibe, our team will reach out to you")
 
   }
-  const handleonapiclick = ()=>{
-      setapiurl('https://petstore.swagger.io/v2/swagger.json')
-      document.getElementById('image-container').innerHTML= <Swagger url={apiurl} />
+  // const handleapiatags = () =>{
+
+  //   setapiurl('https://petstore.swagger.io/v2/swagger.json')
+  // }
+  const handleapibuttonclick = ()=>{
+
+    products.map((e)=>{
+      if(e.Level=='API'){
+
+        document.getElementById('content_p').innerHTML += `<a ${setapiurl(e.Url)}>${e.name}</a><br>`
+
+        // document.getElementById('image-container').innerHTML= `${<Swagger url={apiurl} />}`
+      }
+    })
   }
   
   return (
@@ -43,35 +55,26 @@ const ApiPageTemplate = () => {
 
         <div>
           <button onClick={() => handleButtonClick('overview')}>Overview</button>
-          <button onClick={() => handleonapiclick('apis')}>APIS</button>
+          <button onClick={() => handleapibuttonclick('apis')}>APIS</button>
           <button onClick={() => handleButtonClick('documentation')}>Documentation</button>
         </div>
       </div>
 
       {/* Third Row - Content */}
       <div className="content">
-        <div className='content_p'>
-          <p>{content}</p>
+        <div className='content_p' id='content_p'>
+
         </div>
 
         <div className="image-container" id='image-container'>
-        <img src="https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg" alt="Sample Image" style={{ width: '10%',height: '50px' }} />
+          {/* {apiurl ? <Swagger url={apiurl}/>:(
+        <img src="https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg" alt="Sample Image" style={{ width: '10%',height: '50px' }} />)} */}
         </div>
+
+
       </div>
     </>
   );
 };
 
 export default ApiPageTemplate;
-
-
-import SwaggerUI from "swagger-ui-react";
-import "swagger-ui-react/swagger-ui.css";
-
-export default function Swagger({url}) {
-  return (
-    <div className="App">
-      <SwaggerUI url={url} />
-    </div>
-  );
-}
