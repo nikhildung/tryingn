@@ -1,7 +1,4 @@
-const handleapibuttonclick = () => {
-  products.map((e) => {
-    if (e.Level === 'API') {
-      document.getElementById('content_p').innerHTML += `<a onClick={() => setapiurl('${e.Url}')}>${e.name}</a><br>`;
-    }
-  });
-};
+{products.map((product) => (
+
+            <a onClick={() => handleApiTagClick(product.Url)}>{product.name}</a>
+          ))}
