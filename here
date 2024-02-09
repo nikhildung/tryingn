@@ -1,87 +1,68 @@
-import React, { useState, useEffect } from "react";
-import "./ApiPageTemplate.css"; // Import the CSS file
-import jsondata from "./ApipageTemplate.json";
-import SwaggerUI from "swagger-ui-react";
-import Swagger from "./Swagger";
+const IMAGE_URL = "https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg";
 
-import products from "./Products";
-const ApiPageTemplate = () => {
-  const [content, setContent] = useState("");
-  const [apiurl, setapiurl] = useState();
-  const handleButtonClick = (contentType) => {
-    const jsonContent = jsondata[contentType];
-    setContent(jsonContent);
-  };
+const products = [
+    {
+        ID: "1",
+        name: "Payments",
+        categoryId: null,
+        src: IMAGE_URL,
+        Description: "This is Payments API",
+        Level:"Category",
+         
+    },
+    {
+        ID:"1_1",
+        categoryId: "1",
+        name: "24*7 Payments",
+        src: IMAGE_URL,
+        Description: "This is Payments API",
+        Level:"SubCategory"  
+        
+    },
+    {
+        ID:"1_2",
+        categoryId: "1",
+        name: "CMS Payments",
+        src: IMAGE_URL,
+        Description: "This is Payments API",
+        Level:"SubCategory"  
+    },
+    {
+        ID:"1_1_1",
+        categoryId: "1_1",
+        name: "NEFT",
+        src: IMAGE_URL,
+        Description: "This is Payments API",
+        Level:"API",
+        Url: "./Petstore.yaml"  
+    },
+    {
+        ID:"1_1_2",
+        categoryId: "1_1",
+        name: "Payments",
+        src: IMAGE_URL,
+        Description: "This is Payments API",
+        Level:"API",
+        Url: "https://petstore.swagger.io/v2/swagger.json"  
+    },
 
-  useEffect(() => {
-    // Simulate clicking the "Overview" button by default
-    handleButtonClick("overview");
-  }, []); // The empty dependency array ensures this effect runs only once on mount
-  const subscibe = () => {
-    alert("If your subscibe, our team will reach out to you");
-  };
-
-  const handleApiTagClick = (url) => {
-    setapiurl(url);
-  };
-
-  const renderSwaggerComponent = () => {
-    if (apiurl) {
-      return <Swagger url={apiurl} />;
-    }
-    return null;
-  };
-
-  return (
-    <>
-      {/* First Row - Breadcrumbs */}
-      <div className="breadcrumbs">Breadcrumbs: Home /</div>
-
-      {/* Second Row - Sidebar */}
-      <div className="sidebar">
-        <div className="sidebar-content">
-          <img
-            src="https://www.kotak.com/content/dam/Kotak/product_card_images/cms-payment-services.jpeg.transform/transformer-width-360-height-202/image.jpeg"
-            alt="Sample Image"
-            style={{ width: "10%", height: "50px" }}
-          />
-          <button onClick={() => subscibe()}>Subscribe</button>
-        </div>
-
-        <div>
-          <button onClick={() => handleButtonClick("overview")}>
-            Overview
-          </button>
-          <button onClick={() => handleButtonClick("apis")}>APIS</button>
-          <button onClick={() => handleButtonClick("documentation")}>
-            Documentation
-          </button>
-        </div>
-      </div>
-
-      {/* Third Row - Content */}
-      <div className="content">
-        <div className="content_p" id="content_p">
-          {/* Map over products and render a tags for products with Level equal to 'API' */}
-          {products.map((product) => {
-            if (product.Level === "API") {
-              return (
-                <a onClick={() => handleApiTagClick(product.Url)}>
-                  {product.name}
-                </a>
-              );
-            }
-            return null;
-          })}
-        </div>
-
-        <div className="image-container" id="image-container">
-          {/* Render Swagger component based on apiurl state */}
-          {renderSwaggerComponent()}
-        </div>
-      </div>
-    </>
-  );
-};
-
-export default ApiPageTemplate;
+    {
+        ID:"2",
+        name: "Collections", 
+        categoryId: null,
+        src: IMAGE_URL,
+        Description: "This is Payments API",
+        Level:"Category"  
+    },
+    {
+        ID:"2_1",
+        categoryId: "2",
+        name: "Nach",
+        src: IMAGE_URL,
+        Description: "This is Payments API",
+        Level:"SubCategory"  
+    },
+    
+];
+ 
+export default products;
