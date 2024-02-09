@@ -1,4 +1,5 @@
-{products.map((product) => (
-
-            <a onClick={() => handleApiTagClick(product.Url)}>{product.name}</a>
-          ))}
+{content === 'APIs' && (
+  products.map((product) => (
+    <a onClick={() => handleApiTagClick(product.Url)}>{product.name}</a>
+  ))
+)}
