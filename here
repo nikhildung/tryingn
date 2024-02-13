@@ -1,9 +1,9 @@
 import React from 'react'
+import styles from '../pages/Herosection.module.css'
 
-
-const Herosection = () => {
+const Herosection= () => {
   return (
-<div className="container">
+<div className={styles.container}>
     <div className="col-12">
 
       <div className="sectionOne">
@@ -11,12 +11,10 @@ const Herosection = () => {
           <div className="col-sm-6">
 
             <div className="row">
-              <h2 className="display-1">Raspberry Pi for Designers</h2>
+              <h2 className="display-3">Unlock the power of Open Banking</h2>
             </div>
-            <div className="row">
-              <h4 className="display-7">The Raspberry Pi may be a computer smaller than a deck of cards, but you’ll be surprised what it can do!</h4>
-              <button type="button" className="btn btn-secondary btn-lg" >Learn More</button>
-            </div>
+
+
           </div>
 
         </div>
