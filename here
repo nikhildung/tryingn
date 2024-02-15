@@ -1,20 +1,64 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Tree } from 'primereact/tree';
 import { TreeNode } from 'primereact/treenode';
-import { NodeService } from './service/NodeService';
+
+import jsondata from './ExploreAPIPage.json';
 
 export default function FilterDemo() {
-    const [nodes, setNodes] = useState<TreeNode[]>([]);
-    
-    useEffect(() => {
-        NodeService.getTreeNodes().then((data) => setNodes(data));
-    }, []);
+    const [selectedNode, setSelectedNode] = useState(null); // State to store the selected node
+
+    // Function to handle node selection
+    const onNodeSelect = (event) => {
+        const clickedNode = event.originalEvent.node;
+        if (clickedNode.children && clickedNode.children.length > 0) {
+            // If a parent node is clicked, set the selected node to display its children
+            setSelectedNode(clickedNode);
+        } else if (clickedNode.url) {
+            // If a child node with a URL is clicked, redirect to YouTube if it is a child node
+            if (isChildNode(clickedNode)) {
+                window.open('https://www.youtube.com/', '_blank');
+            } else {
+                window.open(clickedNode.url, '_blank');
+            }
+        }
+    };
+
+    // Function to check if a node is a child node
+    const isChildNode = (node) => {
+        return node.parent;
+    };
+
+    // Function to render tiles for children of the selected parent node
+    const renderTilesForChildren = () => {
+        if (selectedNode && selectedNode.children && selectedNode.children.length > 0) {
+            return selectedNode.children.map(child => (
+                <div key={child.id} className="tile">
+                    <img src={child.src} alt={child.label} />
+                    <div className="tile-info">
+                        <div>{child.label}</div>
+                        <div>{child.Description}</div>
+                    </div>
+                </div>
+            ));
+        }
+        return null;
+    };
 
     return (
-        <div className="card flex flex-wrap justify-content-center gap-5">
-
-            <Tree value={nodes} filter filterMode="strict" filterPlaceholder="Strict Filter" className="w-full md:w-30rem" />
+        <div className="flex flex-wrap">
+            <div className="tree-container">
+                <Tree
+                    value={jsondata}
+                    filter
+                    filterMode="strict"
+                    filterPlaceholder="Strict Filter"
+                    selectionMode="single"
+                    onNodeSelect={onNodeSelect}
+                />
+            </div>
+            <div className="tiles-container">
+                {renderTilesForChildren()}
+            </div>
         </div>
-    )
+    );
 }
-        
