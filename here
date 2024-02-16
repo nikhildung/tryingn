@@ -1,28 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Tree } from "primereact/tree";
 import { TreeNode } from "primereact/treenode";
 import jsondata from "./ExploreAPIPage.json";
 import TilesRendering from "./TilesRendering";
 
 export default function FilterDemo() {
-  const prev = (e: Event) => {
-    // const x = JSON.stringify(e.node)
-    // console.log(x)
-    // console.log(x.id)
+  const [selectedNode, setSelectedNode] = useState(null);
 
-    // console.log(e.node.children[0]);
-
-    // console.log(x.children[0].label)
-    // console.log(x.children[1].label)
-    // console.log(x.children[2].label)
-    // console.log(x.children[3].label)
-
-    // console.log(JSON.stringify(e.node));
-
-    if (e.node.children.length >= 1) {
-      <TilesRendering selectedNode={e.node} />;
-      console.log(e.node);
-    } else {
+  const handleNodeSelect = (e) => {
+    if (e.node.children && e.node.children.length >= 1) {
+      setSelectedNode(e.node);
     }
   };
 
@@ -34,8 +21,9 @@ export default function FilterDemo() {
         filterMode="strict"
         filterPlaceholder="Strict Filter"
         className="w-full md:w-30rem"
-        onNodeClick={prev}
+        onNodeSelect={handleNodeSelect}
       />
+      {selectedNode && <TilesRendering selectedNode={selectedNode} />}
     </div>
   );
 }
