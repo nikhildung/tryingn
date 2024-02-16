@@ -1,16 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
 import { Tree } from "primereact/tree";
-import { TreeNode } from "primereact/treenode";
 import jsondata from "./ExploreAPIPage.json";
 import TilesRendering from "./TilesRendering";
 
 export default function FilterDemo() {
-  const [selectedNode, setSelectedNode] = useState(null);
-
   const handleNodeSelect = (e) => {
-    if (e.node.children && e.node.children.length >= 1) {
-      setSelectedNode(e.node);
+    const parentNode = e.node;
+    if (parentNode.children && parentNode.children.length >= 1) {
+      parentNode.children.forEach((childNode) => {
+        // Render cards for each child node
+        console.log("Rendering card for child node:", childNode.label);
+        // Call TilesRendering component for each child node
+        renderTilesForNode(childNode);
+      });
     }
+  };
+
+  const renderTilesForNode = (node) => {
+    // Render TilesRendering component for the given node
+    return <TilesRendering selectedNode={node} />;
   };
 
   return (
@@ -23,7 +31,6 @@ export default function FilterDemo() {
         className="w-full md:w-30rem"
         onNodeSelect={handleNodeSelect}
       />
-      {selectedNode && <TilesRendering selectedNode={selectedNode} />}
     </div>
   );
 }
