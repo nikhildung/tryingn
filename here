@@ -1,17 +1,41 @@
-// Function to handle node selection
-const onNodeSelect = (event) => {
-    const clickedNode = event.originalEvent.node;
-    if (clickedNode) { // Check if clickedNode is not undefined
-        if (clickedNode.children && clickedNode.children.length > 0) {
-            // If a parent node is clicked, set the selected node to display its children
-            setSelectedNode(clickedNode);
-        } else if (clickedNode.url) {
-            // If a child node with a URL is clicked, redirect to YouTube if it is a child node
-            if (isChildNode(clickedNode)) {
-                window.open('https://www.youtube.com/', '_blank');
-            } else {
-                window.open(clickedNode.url, '_blank');
-            }
-        }
+import React, { useState, useEffect } from "react";
+import { Tree } from "primereact/tree";
+import { TreeNode } from "primereact/treenode";
+import jsondata from "./ExploreAPIPage.json";
+import TilesRendering from "./TilesRendering";
+
+export default function FilterDemo() {
+  const prev = (e: Event) => {
+    // const x = JSON.stringify(e.node)
+    // console.log(x)
+    // console.log(x.id)
+
+    // console.log(e.node.children[0]);
+
+    // console.log(x.children[0].label)
+    // console.log(x.children[1].label)
+    // console.log(x.children[2].label)
+    // console.log(x.children[3].label)
+
+    // console.log(JSON.stringify(e.node));
+
+    if (e.node.children.length >= 1) {
+      <TilesRendering selectedNode={e.node} />;
+      console.log(e.node);
+    } else {
     }
-};
+  };
+
+  return (
+    <div className="flex flex-wrap justify-content-center gap-5">
+      <Tree
+        value={jsondata}
+        filter
+        filterMode="strict"
+        filterPlaceholder="Strict Filter"
+        className="w-full md:w-30rem"
+        onNodeClick={prev}
+      />
+    </div>
+  );
+}
